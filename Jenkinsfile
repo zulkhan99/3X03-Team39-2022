@@ -1,13 +1,28 @@
-pipeline{
-    agent {
-        docker {
-            image 'python:3:10-alpine'
-        }
-    }
-    stages{
-        stage('Build server'){
-            steps{
-                sh 'python manage.py runserver'
+pipeline {
+    agent any
+
+    stages {
+        stage('Docker Compose') {
+            steps {
+                echo 'Composing'
+                step([
+                    $class: 'DockerComposeBuilder', 
+                    dockerComposeFile: 'docker-compose.yml', 
+                    option: [$class: 'StartAllServices'], 
+                    useCustomDockerComposeFile: true
+                ])
+                step([
+                    $class: 'DockerComposeBuilder', 
+                    dockerComposeFile: 'docker-compose.yml', 
+                    option: [
+                        $class: 'ExecuteCommandInsideContainer', 
+                        command: 'python manage.py collectstatic --no-input --clear', 
+                        index: 1, 
+                        privilegedMode: true, 
+                        service: 'web', 
+                        workDir: ''
+                    ], 
+                    useCustomDockerComposeFile: false])
             }
         }
     }
