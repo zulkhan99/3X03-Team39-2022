@@ -16,3 +16,4 @@ This command migrates the django models into the database.
 $ docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
 ```
 This command allows the web application to find static files through nginx.
+Web application should be live at http://localhost:1337
