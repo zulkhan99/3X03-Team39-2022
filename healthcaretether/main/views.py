@@ -3,13 +3,16 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
+from django.views.decorators.csrf import requires_csrf_token
 
 
 # Create your views here.
 
 #authentication
+
 def wrong_user(request):
     return render(request,"wrong_user.html")
+
 
 @login_required(login_url='/auth/login/')
 def dashboardRedirect(request):
@@ -26,8 +29,6 @@ def logout_request(request):
 	logout(request)
 	messages.info(request, "You have successfully logged out.") 
 	return redirect("/auth/login/")
-
-
 
 
 #admin views
