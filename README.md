@@ -9,9 +9,10 @@ docker-compose -f docker-compose.yml up -d --build
 This builds and runs the 3 containers required, django, postgres, and nginx.
 
 ```
+docker-compose -f docker-compose.yml exec web python manage.py makemigrations
 docker-compose -f docker-compose.yml exec web python manage.py migrate --noinput
 ```
-This command migrates the django models into the database.
+These commands migrates the django models into the database.
 ```
 docker-compose -f docker-compose.yml exec web python manage.py collectstatic --no-input --clear
 ```
