@@ -25,5 +25,10 @@ pipeline {
                     useCustomDockerComposeFile: false])
             }
         }
+        stage('Test') {
+            steps {
+                sh 'docker container ls'
+            }
+        }
     }
 }
