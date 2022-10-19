@@ -1,34 +1,24 @@
 pipeline {
     agent any
-
+    
     stages {
-        // stage('Docker Compose') {
-        //     steps {
-        //         echo 'Composing'
-        //         step([
-        //             $class: 'DockerComposeBuilder', 
-        //             dockerComposeFile: 'docker-compose.yml', 
-        //             option: [$class: 'StartAllServices'], 
-        //             useCustomDockerComposeFile: true
-        //         ])
-        //         step([
-        //             $class: 'DockerComposeBuilder', 
-        //             dockerComposeFile: 'docker-compose.yml', 
-        //             option: [
-        //                 $class: 'ExecuteCommandInsideContainer', 
-        //                 command: 'python manage.py collectstatic --no-input --clear', 
-        //                 index: 1, 
-        //                 privilegedMode: true, 
-        //                 service: 'web', 
-        //                 workDir: ''
-        //             ], 
-        //             useCustomDockerComposeFile: false])
-        //     }
-        // }
-        stage('Docker Compose') {
-            steps {
-                sh 'docker-compose version'
+        stage("Building"){
+            agent{
+                docker{
+                    image 'python'
+                }
             }
+            steps{
+                sh '-m venv env'
+                sh 'source env/bin/activate'
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage("Testing"){
+
+        }
+        stage("Deploying"){
+
         }
     }
 }
