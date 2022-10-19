@@ -15,7 +15,7 @@ pipenv shell
 pip install -r requirements.txt
 ```
 
-Place the .env file into the root directory. This contains the django secret key
+Place the .env file into the same directory as manage.py. This contains the django secret key
 
 ### Setup for web app
 Once the requirements are installed, you will need to migrate the database models. We are using sqlite for now, will change in the future
