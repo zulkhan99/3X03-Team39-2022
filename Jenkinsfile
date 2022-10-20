@@ -9,9 +9,7 @@ pipeline {
 		// }
         stage("Testing"){
             steps{
-                sh '''#!/bin/bash
 		        echo "hello world"
-                '''
             }
         }
         stage("Deploying"){
