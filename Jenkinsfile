@@ -2,27 +2,23 @@ pipeline {
     agent any
 
     stages {
-        stage("Building"){
-            agent{
-                docker{
-                    image 'python'
-                }
-            }
-            steps{
-                sh '-m venv env'
-                sh 'source env/bin/activate'
-                sh 'pip install -r requirements.txt'
-            }
-        }
+		stage('Build') {
+		    steps {
+			    sh 'echo "building..."'
+		    }
+		}
+	}
         stage("Testing"){
             steps{
-                echo 'testing'
+                sh '''#!/bin/bash
+		        echo "hello world"
+                '''
             }
         }
         stage("Deploying"){
             steps{
                 echo 'deploying'
+                sh 'sudo nohup python3 manage.py runserver'
             }
         }
     }
-}
