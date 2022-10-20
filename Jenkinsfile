@@ -9,15 +9,14 @@ pipeline {
 		// }
         stage("Testing"){
             steps{
-                sh '''#!/bin/bash
-		        echo "hello world"
-                '''
+                sh 'echo xd'
+                sh 'echo test'
             }
         }
         stage("Deploying"){
             steps{
                 echo 'deploying'
-                sh 'python3 manage.py runserver'
+                
             }
         }
     }
