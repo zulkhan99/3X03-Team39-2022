@@ -7,7 +7,6 @@ pipeline {
 			    sh 'echo "building..."'
 		    }
 		}
-	}
         stage("Testing"){
             steps{
                 sh '''#!/bin/bash
@@ -22,3 +21,4 @@ pipeline {
             }
         }
     }
+}
