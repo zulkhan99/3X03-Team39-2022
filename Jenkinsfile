@@ -1,5 +1,9 @@
 pipeline {
-    agent {dockerfile { filename 'Dockerfile.Jenkins' }}
+    agent {
+        dockerfile {
+            filename 'Dockerfile.Jenkins'
+        }
+    }
 
     stages {
 		// stage('Build') {
@@ -16,7 +20,7 @@ pipeline {
         stage("Deploying"){
             steps{
                 echo 'deploying'
-                
+
             }
         }
     }
