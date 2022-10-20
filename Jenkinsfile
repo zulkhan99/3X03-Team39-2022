@@ -17,7 +17,7 @@ pipeline {
         stage("Deploying"){
             steps{
                 echo 'deploying'
-                sh 'sudo nohup python3 manage.py runserver'
+                sh 'python3 manage.py runserver'
             }
         }
     }
