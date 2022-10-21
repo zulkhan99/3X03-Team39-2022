@@ -6,11 +6,6 @@ pipeline {
     }
 
     stages {
-		// stage('Build') {
-		//     steps {
-		// 	    echo 'building'
-		//     }
-		// }
         stage("Testing"){
             steps{
                 echo 'testing'
