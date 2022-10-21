@@ -13,15 +13,21 @@ pipeline {
 		// }
         stage("Testing"){
             steps{
-                sh 'echo xd'
-                sh 'echo test'
-            }
-        }
-        stage("Deploying"){
-            steps{
-                echo 'deploying'
-
+                echo 'testing'
+                sh 'pytest'
             }
         }
     }
+    post {
+		always {
+			echo 'The pipeline completed'
+		}
+		success {				
+			echo "Django Application Up and running!!"
+		}
+		failure {
+			echo 'Build stage failed'
+			error('Stopping early…')
+		}
+	}
 }

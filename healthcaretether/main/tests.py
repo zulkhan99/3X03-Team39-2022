@@ -1,5 +1,8 @@
 from django.test import TestCase
+from main.models import *
 
 # Create your tests here.
-#testing webhook
-#testing webhook 2
+class hospitalTestCase(TestCase):
+    def setUp(self):
+        Hospital.objects.create(name="Tan Tock Seng Hospital")
+        Hospital.objects.create(name="National University Hospital")
