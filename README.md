@@ -1,23 +1,39 @@
 # 3X03-Team39-2022
 ## Healthcaretether web application
-This web application requires the use of Docker to build. Refer to https://docs.docker.com/engine/install/ for installation instructions
 ## How to run
-Navigate to root of project folder in the terminal.
-```
-docker-compose -f docker-compose.yml up -d --build
-```
-This builds and runs the 3 containers required, django, postgres, and nginx.
+Django is best run in a virtual environment, feel free to setup with the environment you are comfortable using
+### Setup for pipenv
 
+In the command prompt
 ```
-docker-compose -f docker-compose.yml exec web python manage.py makemigrations
-docker-compose -f docker-compose.yml exec web python manage.py migrate --noinput
+pip install pipenv
 ```
-These commands migrates the django models into the database.
-```
-docker-compose -f docker-compose.yml exec web python manage.py collectstatic --no-input --clear
-```
-This command allows the web application to find static files through nginx.
 
-Web application should be live at http://localhost:1337. To run commands for django, use 
+cd to the repo directory
 ```
-docker-compose -f docker-compose.yml exec web python manage.py <command>
+pipenv shell
+pip install -r requirements.txt
+```
+
+Place the .env file into the same directory as manage.py. This contains the django secret key
+
+### Setup for web app
+Once the requirements are installed, you will need to migrate the database models. We are using sqlite for now, will change in the future
+
+make sure you are in the env `pipenv shell`
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Create superuser
+```
+python manage.py createsuperuser
+```
+
+Once created, start the web app
+```
+python manage.py runserver
+```
+
+To create accounts for now, go to user management and use the django user management

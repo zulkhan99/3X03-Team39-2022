@@ -1,27 +1,22 @@
 pipeline {
-    agent any
+    agent {
+        dockerfile {
+            filename 'Dockerfile.Jenkins'
+        }
+    }
 
     stages {
-        stage("Building"){
-            agent{
-                docker{
-                    image 'python'
-                }
-            }
-            steps{
-                sh '-m venv env'
-                sh 'source env/bin/activate'
-                sh 'pip install -r requirements.txt'
-            }
-        }
+		// stage('Build') {
+		//     steps {
+		// 	    echo 'building'
+		//     }
+		// }
         stage("Testing"){
             steps{
                 echo 'testing'
                 sh 'pytest'
             }
         }
-
-
     }
     post {
 		always {
