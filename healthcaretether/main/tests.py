@@ -4,6 +4,8 @@ from django.test import TestCase
 from main.models import *
 
 # Create your tests here.
+
+#testing pytest
 class hospitalTestCase(TestCase):
     def setUp(self):
         Hospital.objects.create(name="Tan Tock Seng Hospital")
