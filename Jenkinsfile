@@ -9,7 +9,7 @@ pipeline {
             }
             steps{
                 echo 'testing'
-                sh 'pytest tests.py'
+                sh 'pytest main/tests.py'
             }
         }
         stage('OWASP DependencyCheck') {
