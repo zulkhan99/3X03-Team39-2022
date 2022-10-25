@@ -1,12 +1,12 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile.Jenkins'
-        }
-    }
-
+    agent any
     stages {
         stage("Testing"){
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.Jenkins'
+                }
+            }
             steps{
                 echo 'testing'
                 sh 'pytest'
