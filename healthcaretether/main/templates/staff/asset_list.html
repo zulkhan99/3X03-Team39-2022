@@ -35,7 +35,7 @@
             {% if item.status == "Submitted" or item.status == "Pending" %}
               Requested
               {% else %}
-              <a href="{% url 'staff-request' item.id %}">Request</a>
+              <a href="{% url 'staff-request' item.slugName %}">Request</a>
               {% endif %}
 
           </td>

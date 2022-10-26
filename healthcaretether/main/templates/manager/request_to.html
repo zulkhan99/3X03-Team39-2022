@@ -40,13 +40,13 @@
               {% if item.status == "Pending" %}
               Waiting              
               {% else %}
-              <a href="{% url 'request-to-by-manager' item.id %}">Request to Other Hospital</a>
+              <a href="{% url 'request-to-by-manager' item.slugName %}">Request to Other Hospital</a>
               {% endif %}
               
             </td>
             <td>
               {% if item.status == "Submitted" %}
-              <a href="{% url 'reject-to-by-manager' item.id %}">Reject</a>
+              <a href="{% url 'reject-to-by-manager' item.slugName %}">Reject</a>
               {% else %}
               
               {% endif %}

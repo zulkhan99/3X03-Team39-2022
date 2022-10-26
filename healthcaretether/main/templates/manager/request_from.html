@@ -17,7 +17,6 @@
       <hr style="width:50px;border:5px solid red" class="w3-round">
     </div>
   
-
     <!-- Asset List for Manager to request -->
     <div class="w3-container" style="margin-top:75px">
       <!-- Table for Asset List for Manager to request -->
@@ -40,7 +39,7 @@
               {{item.invStatus}}
             </td>
             <td>
-              <a href="{% url 'approve' item.id %}">Edit</a>
+              <a href="{% url 'approve' item.slugName %}">Edit</a>
             </td>
 
             </tr>

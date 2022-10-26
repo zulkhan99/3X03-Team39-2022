@@ -29,7 +29,7 @@ body
     word-wrap: break-word;
     position: absolute;
     display: inline-block;
-    bottom: 10;
+    bottom: 10px;
     left: 15px;
     width: 90%;
 }

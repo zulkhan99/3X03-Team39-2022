@@ -28,7 +28,7 @@ class CustomUserChangeForm(UserChangeForm):
 class addItemForm(ModelForm):
     class Meta:
         model = Items
-        fields = '__all__'
+        exclude = ['slug']
 
 class managerItemForm(ModelForm):
     def __init__(self, *args, **kwargs):

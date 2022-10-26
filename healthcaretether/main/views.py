@@ -8,6 +8,7 @@ from .models import Items, CustomUser, Inventory, Requests
 from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -67,11 +68,11 @@ def add_assets(request):
 
 #admin Update item
 @login_required(login_url='auth/login/')
-def update_assets(request, pk):
+def update_assets(request, slug):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
-    
-    item = Items.objects.get(id = pk)
+    slug = get_object_or_404(Items,slug=slug)
+    item = Items.objects.get(id = slug.id)
     form = addItemForm(instance=item)
 
     if request.method == 'POST':
@@ -85,11 +86,12 @@ def update_assets(request, pk):
 
 #admin Delete item
 @login_required(login_url='auth/login/')
-def delete_assets(request, pk):
+def delete_assets(request, slug):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
     
-    item = Items.objects.get(id=pk)
+    slug = get_object_or_404(Items,slug=slug)
+    item = Items.objects.get(id=slug.id)
     if request.method == 'POST':
         item.delete()
         return redirect('it-home')
@@ -124,11 +126,14 @@ def requested_list(request):
 
 #staff Change inventory status to SUBMITTED
 @login_required(login_url='/auth/login/')
-def staff_request(request,pk):
+def staff_request(request,slug):
     if not request.user.role == "S":
         return redirect("/wrong_user/")
 
-    inv = Inventory.objects.get(id = pk)
+    slug = get_object_or_404(Items,slug=slug)
+    slugid = Items.objects.get(id = slug.id)
+    userHospID = request.user.hospital
+    inv = Inventory.objects.filter(hospital_id = userHospID).get(item_id = slugid)
     inv.status = "Submitted"
     inv.save(update_fields=['status'])
     return redirect('staff-home') 
@@ -165,11 +170,13 @@ def inventory_list(request):
 
 #mananger Update inventory item
 @login_required(login_url='auth/login/')
-def manager_update_assets(request, pk):
+def manager_update_assets(request, slug):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
     
-    item = Inventory.objects.get(id = pk)
+    userHospID = request.user.hospital
+    slug = get_object_or_404(Items,slug=slug)
+    item = Inventory.objects.filter(hospital_id = userHospID).get(item_id = slug)
     form = managerItemForm(instance=item)
 
     if request.method == 'POST':
@@ -183,11 +190,12 @@ def manager_update_assets(request, pk):
 
 #mananger Delete inventory item
 @login_required(login_url='auth/login/')
-def manager_delete_assets(request, pk):
+def manager_delete_assets(request, slug):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
-    
-    item = Inventory.objects.get(id=pk)
+    userHospID = request.user.hospital
+    slug = get_object_or_404(Items,slug=slug)
+    item = Inventory.objects.filter(hospital_id = userHospID).get(item_id=slug)
     if request.method == 'POST':
         item.delete()
         return redirect('inventory-list')
@@ -207,13 +215,15 @@ def select_list(request):
 
 #mananger Select item from Global List
 @login_required(login_url='/auth/login/')
-def select(request,pk):
+def select(request,slug):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
     
+    slug = get_object_or_404(Items,slug=slug)
+    slugid = Items.objects.get(id = slug.id)
     userHospID = request.user.hospital
-    item = Items.objects.get(id = pk)
-    inv = Inventory(hospital = userHospID , item = item , quantity = 0, status = "None")
+    # item = Items.objects.get(id = pk)
+    inv = Inventory(hospital = userHospID , item = slugid , quantity = 0, status = "None")
     inv.save()
     return redirect('select-list') 
 
@@ -230,12 +240,14 @@ def request_to(request):
 
 #mananger Update the staff requested item status to PENDING and include in REQUEST TABLE
 @login_required(login_url='/auth/login/')
-def manager_update_request_to(request,pk):
+def manager_update_request_to(request,slug):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
 
+    slug = get_object_or_404(Items,slug=slug)
+    slugid = Items.objects.get(id = slug.id)
     userHospID = request.user.hospital
-    inv = Inventory.objects.get(id = pk)
+    inv = Inventory.objects.filter(hospital_id = userHospID).get(item_id = slugid)
     inv.status = "Pending"
     inv.save(update_fields=['status'])
     req = Requests(inventory= inv, requestBy = userHospID.id, requestAcceptedFrom = 0)
@@ -245,11 +257,14 @@ def manager_update_request_to(request,pk):
 
 #mananger Update the staff requested item status to NONE
 @login_required(login_url='/auth/login/')
-def manager_delete_request_to(request,pk):
+def manager_delete_request_to(request,slug):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
 
-    req = Inventory.objects.get(id = pk)
+    slug = get_object_or_404(Items,slug=slug)
+    slugid = Items.objects.get(id = slug.id)
+    userHospID = request.user.hospital
+    req = Inventory.objects.filter(hospital_id = userHospID).get(item_id = slugid)
     req.status = "None"
     req.save(update_fields=['status'])
     return redirect('request-to')
@@ -262,20 +277,24 @@ def request_from_list(request):
 
     userHospID = request.user.hospital
     inv = Inventory.objects.filter(hospital_id = userHospID).values('item_id')
-    req = Requests.objects.exclude(inventory_id = userHospID.id).filter(inventory_id__in = inv).filter(requestAcceptedFrom = 0)
-    context = {'reqs' : req}
+    req = Requests.objects.filter(requestAcceptedFrom = 0).exclude(requestBy = userHospID.id).filter(inventory__item__in = inv)
+    context = {'reqs' : req, 'invs': inv}
     return render(request,'manager/request_from.html', context)
 
 #mananger Update the REQUEST TABLE field "requestedAcceptedFrom" with the hosp ID and the item inventory status to NONE
 @login_required(login_url='/auth/login/')
-def manager_request_from(request, pk):
+def manager_request_from(request, slug):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
 
+
     userHospID = request.user.hospital
-    req = Requests.objects.get(id = pk)
-    item = Items.objects.get(id = req.inventory_id)
-    inv = Inventory.objects.filter(item_id = item).filter(hospital_id = req.inventory_id).get(item_id = item)
+    slug = get_object_or_404(Items,slug=slug)
+    slugid = Items.objects.get(id = slug.id)
+    invslug = Inventory.objects.filter(item_id = slugid)
+    req = Requests.objects.get(inventory__in = invslug)
+
+    inv = Inventory.objects.filter(hospital_id = req.requestBy).get(item_id = slugid)
     inv.status = "None"
     inv.save(update_fields=['status'])
     req.requestAcceptedFrom = userHospID.id
@@ -284,15 +303,17 @@ def manager_request_from(request, pk):
 
 #mananger APPROVE request by other hospital
 @login_required(login_url='/auth/login/')
-def approve(request, pk):
+def approve(request, slug):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
-    req = Requests.objects.get(id = pk)
-    item = Items.objects.get(id = req.inventory_id)
-    # inv = Inventory.objects.filter(item_id = item).filter(hospital_id = userHospID)
-    inv = Inventory.objects.filter(item_id = item).filter(hospital_id = userHospID).get(item_id = item)
+    slug = get_object_or_404(Items,slug=slug)
+    slugid = Items.objects.get(id = slug.id)
+    invslug = Inventory.objects.filter(item_id = slugid)
+    req = Requests.objects.get(inventory__in = invslug)
+    item = Items.objects.get(product_name = req.inventory)
+    inv = Inventory.objects.filter(hospital_id = userHospID).get(item = item)
     context = {'reqs' : req, 'invs' : inv}
     return render(request,'manager/approve.html', context)
 
