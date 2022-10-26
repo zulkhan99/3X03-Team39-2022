@@ -23,16 +23,13 @@
       <!-- Table to manage asset -->
       <table id="manageInvList" class="ui celled table" style="width:100%">
         <thead>
-          <th>ID</th>
           <th>Product Name</th>
           <th>Quantity</th>
-          <th>Edit</th>
-          <th>Delete</th>
+          <th colspan="2">Action</th>
         </thead>
         <tbody>
           {% for item in items %}
           <tr>
-            <td>{{ item.id }}</td>
             <td>{{ item.itemName}}</td>
             <td>{{ item.quantity}}</td>
 

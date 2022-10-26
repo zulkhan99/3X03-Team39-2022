@@ -22,16 +22,9 @@
     </div>
     <br>
 
-    {% for item in items %}
-    <div>
-      <h1>{{item.id}} -- {{item.product_name}}</h1>
-    </div>
-    {% endfor %}
-
     <!-- Table to manage asset -->
     <table id="manageAssetTable" class="ui celled table" style="width:100%">
       <thead>
-        <th>ID</th>
         <th>Product Name</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -39,7 +32,6 @@
       <tbody>
         {% for item in items %}
         <tr>
-          <td>{{ item.id }}</td>
           <td>{{ item.product_name}}</td>
           <td>
             <a href="{% url 'update-assets' item.id %}">Edit</a>

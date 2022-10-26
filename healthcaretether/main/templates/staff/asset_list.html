@@ -16,7 +16,6 @@
     <!-- Table to manage asset -->
     <table id="assetListTable" class="ui celled table" style="width:100%">
       <thead>
-        <th>ID</th>
         <th>Product Name</th>
         <th>Quantity</th>
         <th>Status</th>
@@ -25,7 +24,6 @@
       <tbody>
         {% for item in items %}
         <tr>
-          <td>{{ item.id }}</td>
           <td>{{ item.itemName}}</td>
           <td>{{ item.quantity}}</td>
         

@@ -18,8 +18,20 @@
         {% csrf_token %}
 
         <p>Are you sure you want to delete "{{obj}}"?</p>
-        <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
-        <input type="submit" value="Confirm"/>
+        <br>
+
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <a href="{{request.META.HTTP_REFERER}}" type="button" class="btn btn-secondary" style="width:100%;" onclick="history.back()">Cancel</a>
+            </div>
+            <div class="col">
+              <input type="submit" class="btn btn-success" style="width:100% ;" value="Confirm" />
+            </div>
+          </div>
+        </div>
+
+
     </form>
 
   </div>
