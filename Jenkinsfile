@@ -10,6 +10,7 @@ pipeline {
             steps{
                 echo 'testing'
                 sh """
+		    cd healthcaretether
 		    python manage.py shell
                     python pytest
                     """
