@@ -9,15 +9,21 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
 
+import logging
+logger = logging.getLogger('main')
 # Create your views here.
 
 #authentication
 def wrong_user(request):
+    message = "User " + request.user.username + " not authorised to access page"
+    logger.error(message)
     return render(request,"wrong_user.html")
 
 @login_required(login_url='/auth/login/')
 def dashboardRedirect(request):
     current_user = request.user
+    message = "User " + current_user.username + " has logged in"
+    logger.info(message)
     if current_user.role == "S":
          return redirect('/staff/home/')
     elif current_user.role == "M":
@@ -27,9 +33,11 @@ def dashboardRedirect(request):
 
 @login_required(login_url='/auth/login/')
 def logout_request(request):
-	logout(request)
-	messages.info(request, "You have successfully logged out.") 
-	return redirect("/auth/login/")
+    logout(request)
+    messages.info(request, "You have successfully logged out.")
+    message = "User " + request.user.username + " has logged out"
+    logger.info("message")
+    return redirect("/auth/login/")
 
 
 #admin views
@@ -60,6 +68,8 @@ def add_assets(request):
         form = addItemForm(request.POST)
         if form.is_valid():
             form.save()
+            message = "Admin " + request.user.username + " added item"
+            logger.info(message)
             return redirect('it-home')
     
     context = {'form' : form}
@@ -78,6 +88,8 @@ def update_assets(request, pk):
         form = addItemForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
+            message = "Admin " + request.user.username + " updated item"
+            logger.info(message)
             return redirect('it-home')
 
     context = {'form' : form}
@@ -92,6 +104,8 @@ def delete_assets(request, pk):
     item = Items.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()
+        message = "Admin " + request.user.username + "deleted item"
+        logger.info(message)
         return redirect('it-home')
     return render(request, 'delete.html', {'obj' : item})
 
@@ -176,6 +190,8 @@ def manager_update_assets(request, pk):
         form = managerItemForm(request.POST, instance=item)
         if form.is_valid():
             form.save()
+            message = "Manager " + request.user.username + "updated inventory item"
+            logger.info(message)
             return redirect('inventory-list')
 
     context = {'form' : form}
@@ -190,6 +206,8 @@ def manager_delete_assets(request, pk):
     item = Inventory.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()
+        message = "Manager " + request.user.username + "deleted inventory item"
+        logger.info(message)
         return redirect('inventory-list')
     return render(request, 'delete.html', {'obj' : item})
 
