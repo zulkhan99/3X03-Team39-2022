@@ -18,7 +18,6 @@ from django.urls import path,include
 from . import auth
 
 import mfa
-#import mfa.TrustedDevice
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +25,5 @@ urlpatterns = [
     path('auth/logout',auth.logoutView,name="logout"),
     #path("auth/", include("django.contrib.auth.urls")),
     path("",include('main.urls')),
-    path('mfa/', include('mfa.urls')),
-    #path('devices/add', mfa.TrustedDevice.add,name="mfa_add_new_trusted_device")
+    path('mfa/', include('mfa.urls'))
 ]
