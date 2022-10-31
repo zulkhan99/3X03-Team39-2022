@@ -10,6 +10,7 @@ pipeline {
             steps{
                 echo 'testing'
                 sh """
+		    python manage.py shell
                     python pytest
                     """
             }
