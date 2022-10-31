@@ -18,21 +18,6 @@ function onClick(element) {
   captionText.innerHTML = element.alt;
 }
 
-
-let dataSetUser = [
-  ['1', 'Tiger Nixon', 'System Architect'],
-  ['2', 'Garrett Winters', 'Accountant'],
-  ['3', 'Ashton Cox', 'Junior Technical Author'],
-  ['4', 'Cedric Kelly', 'Senior Javascript Developer'],
-]
-
-let dataSetAsset = [
-  ['1', 'Mask', '123-456', 100 , 'None'],
-  ['2', 'Glove', '111-222', 100, 'None'],
-  ['3', 'Medical Cap', '001-112', 100, 'None'],
-  ['4', 'Sanitiser', '000-001', 100, 'None'],
-]
-
 //Asset List Table
 $(document).ready(function () {
   $('#assetListTable').DataTable({
@@ -69,27 +54,4 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('#manageInvList').DataTable({});
-});
-
-
-$('.add-to-list').click(function () {
-  var id;
-  var url;
-  id = $(this).attr("data-catid");
-  url = $(this).attr("to_java");
-  console.log(id);
-  $.ajax(
-      {
-          type: "GET",
-          url: url,
-          data: {
-              item_id: id
-          },
-          success: function (data) {
-            $('#selectAssetTable').ajax.reload();
-            // $('#add-to-list' + id).removeClass('btn btn-primary btn-block');
-            // $('#add-to-list' + id).addClass('btn btn-success btn-block');
-            // $('#add-to-list' + id).text('Added to the shopping list');
-          }
-      })
 });

@@ -15,7 +15,6 @@
     </nav>
     <hr style="width:50px;border:5px solid red" class="w3-round">
   </div>
-  
     
     <!-- OWN Hospital Inventory List Manager to manage -->
     <div class="w3-container" style="margin-top:75px">
@@ -23,23 +22,20 @@
       <!-- Table to manage asset -->
       <table id="manageInvList" class="ui celled table" style="width:100%">
         <thead>
-          <th>ID</th>
           <th>Product Name</th>
           <th>Quantity</th>
-          <th>Edit</th>
-          <th>Delete</th>
+          <th colspan="2">Action</th>
         </thead>
         <tbody>
           {% for item in items %}
           <tr>
-            <td>{{ item.id }}</td>
             <td>{{ item.itemName}}</td>
             <td>{{ item.quantity}}</td>
 
             <td>
-              <a href="{% url 'manage-inventory-list' item.id %}">Edit</a>
+              <a href="{% url 'manage-inventory-list' item.slugName %}">Edit</a>
             </td>
-            <td><a href="{% url 'manage-delete-assets' item.id %}">Delete</a></td>
+            <td><a href="{% url 'manage-delete-assets' item.slugName %}">Delete</a></td>
           </tr>
           {% endfor %}
         </tbody>

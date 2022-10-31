@@ -23,7 +23,6 @@
       <!-- Table for Asset List for Manager to request -->      
       <table id="requestToTable" class="ui celled table" style="width:100%">
         <thead>
-          <th>ID</th>
           <th>Product Name</th>
           <th>Quantity</th>
           <th>Status</th>
@@ -32,24 +31,24 @@
         <tbody>
           {% for item in items %}
           <tr>
-            <td>{{ item.id }}</td>
             <td>{{ item.itemName}}</td>
             <td>{{ item.quantity}}</td>
             <td>
               {{item.status}}
             </td>
             <td>
-              {% if item.status == "Submitted" or item.status == "Pending" %}
+              {% if item.status == "Pending" %}
               Waiting              
               {% else %}
-              <a href="{% url 'request-to-by-manager' item.id %}">Request to Other Hospital</a>
+              <a href="{% url 'request-to-by-manager' item.slugName %}">Request to Other Hospital</a>
               {% endif %}
               
             </td>
             <td>
-              {% if item.status == "Submitted" or item.status == "Pending" %}
+              {% if item.status == "Submitted" %}
+              <a href="{% url 'reject-to-by-manager' item.slugName %}">Reject</a>
               {% else %}
-              <a href="{% url 'reject-to-by-manager' item.id %}">Reject</a>
+              
               {% endif %}
               
 
