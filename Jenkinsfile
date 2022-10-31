@@ -10,11 +10,7 @@ pipeline {
             steps{
                 echo 'testing'
                 sh """
-                    pip install pipenv
-                    pipenv shell
-                    pip install -r requirements.txt
-                    python manage.py migrate
-                    pytest
+                    python pytest
                     """
             }
         }
