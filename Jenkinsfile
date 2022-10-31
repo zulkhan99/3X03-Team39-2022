@@ -9,7 +9,10 @@ pipeline {
             }
             steps{
                 echo 'testing'
-                sh 'pytest'
+                sh """
+                    pipenv shell
+                    pytest
+                    """
             }
         }
         stage('OWASP DependencyCheck') {
