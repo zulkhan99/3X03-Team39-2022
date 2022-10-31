@@ -12,7 +12,7 @@ pipeline {
                 sh """
 		    cd healthcaretether
 		    python manage.py shell
-                    python pytest
+                    pytest
                     """
             }
         }
