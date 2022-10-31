@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import logout
+from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
@@ -15,7 +15,9 @@ from django.db.models import Q
 def wrong_user(request):
     return render(request,"wrong_user.html")
 
-@login_required(login_url='/auth/login/')
+
+#@login_required(login_url='/auth/login/')
+@login_required()
 def dashboardRedirect(request):
     current_user = request.user
     if current_user.role == "S":
@@ -25,7 +27,8 @@ def dashboardRedirect(request):
     elif current_user.role == "A":
         return redirect('/it/home/')
 
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def logout_request(request):
 	logout(request)
 	messages.info(request, "You have successfully logged out.") 
@@ -34,7 +37,8 @@ def logout_request(request):
 
 #admin views
 #admin display item list
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def it_home(request):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
@@ -43,14 +47,16 @@ def it_home(request):
     context = {'items' : items}
     return render(request,'IT/item_management.html', context)
 
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def account_management(request):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
     return redirect("/admin/")
 
 #admin add item
-@login_required(login_url='auth/login/')
+#@login_required(login_url='auth/login/')
+@login_required()
 def add_assets(request):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
@@ -66,7 +72,8 @@ def add_assets(request):
     return render(request,'IT/add_assets.html', context)
 
 #admin Update item
-@login_required(login_url='auth/login/')
+#@login_required(login_url='auth/login/')
+@login_required()
 def update_assets(request, pk):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
@@ -84,7 +91,8 @@ def update_assets(request, pk):
     return render(request, 'IT/add_assets.html', context)
 
 #admin Delete item
-@login_required(login_url='auth/login/')
+#@login_required(login_url='auth/login/')
+@login_required()
 def delete_assets(request, pk):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
@@ -101,7 +109,8 @@ def delete_assets(request, pk):
 
 #staff views
 #staff Display hospital inventory list
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def staff_home(request):
     if not request.user.role == "S":
         return redirect("/wrong_user/")
@@ -112,7 +121,8 @@ def staff_home(request):
     return render(request,'staff/asset_list.html', context)
 
 #staff Display REQUESTED hospital inventory list
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def requested_list(request):
     if not request.user.role == "S":
         return redirect("/wrong_user/")
@@ -123,7 +133,8 @@ def requested_list(request):
     return render(request,'staff/requested_list.html', context)
 
 #staff Change inventory status to SUBMITTED
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def staff_request(request,pk):
     if not request.user.role == "S":
         return redirect("/wrong_user/")
@@ -139,21 +150,24 @@ def staff_request(request,pk):
 
 #mananger views
 #mananger Display request management page
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def manager_home(request):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
     return render(request,'manager/request_management.html')
 
 #mananger Display inventory management page
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def inventory_management(request):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
     return render(request, 'manager/inventory_management.html')
 
 #mananger Display hospital inventory list
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def inventory_list(request):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -164,7 +178,8 @@ def inventory_list(request):
     return render(request, 'manager/inventory_list.html', context)
 
 #mananger Update inventory item
-@login_required(login_url='auth/login/')
+#@login_required(login_url='auth/login/')
+@login_required()
 def manager_update_assets(request, pk):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -182,7 +197,8 @@ def manager_update_assets(request, pk):
     return render(request, 'manager/manage_asset.html', context)
 
 #mananger Delete inventory item
-@login_required(login_url='auth/login/')
+#@login_required(login_url='auth/login/')
+@login_required()
 def manager_delete_assets(request, pk):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -194,7 +210,8 @@ def manager_delete_assets(request, pk):
     return render(request, 'delete.html', {'obj' : item})
 
 #mananger view inventory item that can be selected
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def select_list(request):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -206,7 +223,8 @@ def select_list(request):
     return render(request, 'manager/select_asset.html', context)
 
 #mananger Select item from Global List
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def select(request,pk):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -218,7 +236,8 @@ def select(request,pk):
     return redirect('select-list') 
 
 #mananger Request that were made by staff
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def request_to(request):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -229,7 +248,8 @@ def request_to(request):
     return render(request,'manager/request_to.html', context)
 
 #mananger Update the staff requested item status to PENDING and include in REQUEST TABLE
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def manager_update_request_to(request,pk):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -244,7 +264,8 @@ def manager_update_request_to(request,pk):
     return redirect('request-to')
 
 #mananger Update the staff requested item status to NONE
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def manager_delete_request_to(request,pk):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -255,7 +276,8 @@ def manager_delete_request_to(request,pk):
     return redirect('request-to')
 
 #mananger Display Requested item from other hospital that has not been accepted
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def request_from_list(request):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -267,7 +289,8 @@ def request_from_list(request):
     return render(request,'manager/request_from.html', context)
 
 #mananger Update the REQUEST TABLE field "requestedAcceptedFrom" with the hosp ID and the item inventory status to NONE
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def manager_request_from(request, pk):
     if not request.user.role == "M":
         return redirect("/wrong_user/")
@@ -283,7 +306,8 @@ def manager_request_from(request, pk):
     return redirect('request-from')
 
 #mananger APPROVE request by other hospital
-@login_required(login_url='/auth/login/')
+#@login_required(login_url='/auth/login/')
+@login_required()
 def approve(request, pk):
     if not request.user.role == "M":
         return redirect("/wrong_user/")

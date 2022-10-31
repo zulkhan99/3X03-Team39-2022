@@ -2,6 +2,9 @@ from django.urls import path
 
 from . import views
 
+import mfa
+import mfa.TrustedDevice
+
 urlpatterns = [
     #authentication
     path('', views.dashboardRedirect, name='dashboardRedirect'),
