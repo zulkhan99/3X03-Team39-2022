@@ -4,7 +4,8 @@ from re import M
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from .managers import CustomUserManager
-
+from django.urls import reverse
+from django.utils.text import slugify
 # Create your models here.
 
 #hospital model
@@ -16,8 +17,17 @@ class Hospital(models.Model):
 #items model
 class Items(models.Model):
     product_name = models.CharField(max_length=40)
+    slug = models.SlugField(null=True, unique=True, max_length=40)
+
+    def name(self):
+        return self.product_name
     def __str__(self):
         return self.product_name
+
+    def save(self, *args, **kwargs):  # new
+        if not self.id:
+            self.slug = slugify(self.product_name)
+        return super().save(*args, **kwargs)
 
 #inventory model
 class Inventory(models.Model):
@@ -34,6 +44,9 @@ class Inventory(models.Model):
     
     def __str__(self):
         return self.item.product_name
+    
+    def slugName(self):
+        return self.item.slug
 
 
 #request model
@@ -56,6 +69,9 @@ class Requests(models.Model):
 
     def invitemId(self):
         return self.inventory.item_id
+    
+    def slugName(self):
+        return self.inventory.item.slug
 
 #custom user model
 class CustomUser(AbstractBaseUser,PermissionsMixin):

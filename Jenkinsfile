@@ -9,7 +9,11 @@ pipeline {
             }
             steps{
                 echo 'testing'
-                sh 'pytest main/tests.py'
+                sh """
+		    cd healthcaretether
+		    python manage.py shell
+                    pytest
+                    """
             }
         }
         stage('OWASP DependencyCheck') {

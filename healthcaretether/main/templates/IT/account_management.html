@@ -16,27 +16,27 @@
   <div class="w3-container" style="margin-top:75px">
     <!-- Add New asset Button -->
     <div class="form-group w3-right-align">
-      <a href="{% url 'add-assets' %}">
-        <input type="button" class="btnSubmit btn btn-primary" value="Add New Assets" />
+      <a href="{% url 'register-request' %}">
+        <input type="button" class="btnSubmit btn btn-primary" value="Add New User" />
       </a>
     </div>
     <br>
 
     <!-- Table to manage asset -->
-    <table id="manageAssetTable" class="ui celled table" style="width:100%">
+    <table id="manageUserTable" class="ui celled table" style="width:100%">
       <thead>
-        <th>Product Name</th>
+        <th>Username</th>
         <th>Edit</th>
-        <th>Delete</th>
+        <th>Change Password</th>
       </thead>
       <tbody>
-        {% for item in items %}
+        {% for user in users %}
         <tr>
-          <td>{{ item.product_name}}</td>
+          <td>{{ user.username}}</td>
           <td>
-            <a href="{% url 'update-assets' item.slug %}">Edit</a>
+            <a href="{% url 'update-request' user.id %}">Update</a>
           </td>
-          <td><a href="{% url 'delete-assets' item.slug %}">Delete</a></td>
+          <td><a href="{% url 'update-password' user.id %}">Change Password</a></td>
         </tr>
         {% endfor %}
       </tbody>

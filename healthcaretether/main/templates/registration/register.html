@@ -20,29 +20,15 @@
 
     {% load crispy_forms_tags %}
 
-    <!-- Add New Asset -->
-    <div class="w3-container" id="addNewAsset" style="margin-top:75px">
-      <form class="row" method="POST" action="">
-        {% csrf_token %}
-        
-        {{ form|crispy}}
-
-        <!-- Submit and cancel button -->
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <a href="{{request.META.HTTP_REFERER}}" type="button" class="btn btn-secondary" style="width:100%;" onclick="history.back()">Cancel</a>
-            </div>
-            <div class="col">
-              <input type="submit" class="btn btn-success" style="width:100% ;" value="Save" />
-            </div>
-          </div>
-        </div>
-
-      </form>
+    
+    <div class="container py-5">
+        <h1>Register</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ register_form|crispy }}                    
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
     </div>
-
-
 
 
 

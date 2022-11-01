@@ -21,29 +21,12 @@
 
     {% load crispy_forms_tags %}
 
-
     <!-- Add New Asset -->
     <div class="w3-container" id="addNewAsset" style="margin-top:75px">
       <form class="row" method="POST" action="">
         {% csrf_token %}
 
-        {{form.as_p}}
-        
-        <!-- <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="floatingInputProduct" placeholder="Product Name">
-          <label for="floatingInputProduct">Product Name</label>
-        </div>
-
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="floatingInputScode" placeholder="Serial Code">
-          <label for="floatingInputScode">Serial Code</label>
-        </div>
-
-        <div class="form-floating mb-3">
-          <input type="number" class="form-control" id="floatingInputQty" placeholder="Quantity">
-          <label for="floatingInputQty">Quantity</label>
-        </div> -->
-
+        {{ form|crispy}}
 
         <!-- Submit and cancel button -->
         <div class="container">

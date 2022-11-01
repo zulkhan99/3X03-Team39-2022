@@ -1,8 +1,9 @@
 from turtle import textinput
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django import forms
 from django.forms import ModelForm, TextInput
 from .models import CustomUser, Inventory, Items
+from django.contrib import messages
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -24,11 +25,16 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username','role','hospital')
 
+class CustomChangeFormPassword(SetPasswordForm):
+    class Meta:
+        model = CustomUser
+        fields = ['new_password1', 'new_password2']
+
 
 class addItemForm(ModelForm):
     class Meta:
         model = Items
-        fields = '__all__'
+        exclude = ['slug']
 
 class managerItemForm(ModelForm):
     def __init__(self, *args, **kwargs):

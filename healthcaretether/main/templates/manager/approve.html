@@ -18,16 +18,6 @@
       <hr style="width:50px;border:5px solid red" class="w3-round">
     </div>
 
-<!-- 
-    <div>
-      <h1>Request -- {{reqs.id}} -- {{reqs.invName}} -- {{reqs.invQty}} -- {{reqs.invHosp}} </h1>
-    </div>
-
-    <div>
-      <h1>OWN -- {{invs.id}} -- {{invs.itemName}} -- {{invs.quantity}} -- {{invs.hospital}} </h1>
-    </div> -->
-
-
 
     <!-- Approve? -->
     <div class="w3-container" id="approve" style="margin-top:75px">
@@ -63,7 +53,7 @@
               <button type="button" class="btn btn-secondary" style="width:100%;" onclick="history.back()">Cancel</button>
             </div>
             <div class="col">
-              <a type="button" class="btn btn-success" style="width:100% ;" href="{% url 'request-from-manager' reqs.id %}" >
+              <a type="button" class="btn btn-success" style="width:100% ;" href="{% url 'request-from-manager' reqs.slugName %}" >
                 Approve
               </a>
             </div>
