@@ -11,6 +11,9 @@ urlpatterns = [
     #IT paths
     path('it/home/', views.it_home, name='it-home'),
     path("it/accounts/",views.account_management, name = "account-management"),
+    path("it/accounts/register/",views.register_request, name = "register-request"),
+    path("it/accounts/update/<str:pk>/",views.update_request, name = "update-request"),
+    path("it/accounts/update/<str:pk>/password",views.update_password, name = "update-password"),
     path('it/add_assets/', views.add_assets, name='add-assets'),
     path('it/update_assets/<slug:slug>/', views.update_assets, name='update-assets'),
     path('it/delete_assets/<slug:slug>/', views.delete_assets, name='delete-assets'),
