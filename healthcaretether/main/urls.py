@@ -2,10 +2,13 @@ from django.urls import path
 
 from . import views
 
+import mfa
+
 urlpatterns = [
     #authentication
     path('', views.dashboardRedirect, name='dashboardRedirect'),
-    path("logout/", views.logout_request, name= "logout-request"),
+    path("auth/logout", views.logout_request, name= "logout-request"),
+    #path("logout/", views.logout_request, name= "logout-request"),
     path("wrong_user/",views.wrong_user,name='wrong_user'),
 
     #IT paths
