@@ -26,6 +26,11 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+Populate database with hospitals
+```
+python manage.py loaddata /fixtures/hospitals.json
+
+
 Create superuser
 ```
 python manage.py createsuperuser
@@ -33,7 +38,6 @@ python manage.py createsuperuser
 
 Once created, start the web app
 ```
-python manage.py runserver
+python manage.py runsslserver
 ```
 
-To create accounts for now, go to user management and use the django user management
