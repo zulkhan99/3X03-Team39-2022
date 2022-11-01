@@ -50,6 +50,13 @@ $(document).ready(function () {
   $('#selectAssetTable').DataTable({});
 });
 
+//Admin table to manage users
+$(document).ready(function () {
+  $('#manageUserTable').DataTable({
+
+  });
+});
+
 
 
 $(document).ready(function () {

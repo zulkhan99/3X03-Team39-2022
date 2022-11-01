@@ -20,8 +20,6 @@ from . import auth
 import mfa
 
 urlpatterns = [
-    path('auth/login',auth.loginView,name="login"),
-    path('auth/logout',auth.logoutView,name="logout"),
     path("auth/", include("django.contrib.auth.urls")),
     path("",include('main.urls')),
     path('mfa/', include('mfa.urls'))

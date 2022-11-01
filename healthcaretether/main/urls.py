@@ -8,8 +8,8 @@ urlpatterns = [
     #authentication
     path('', views.dashboardRedirect, name='dashboardRedirect'),
     path("auth/logout", views.logout_request, name= "logout-request"),
-    #path("logout/", views.logout_request, name= "logout-request"),
     path("wrong_user/",views.wrong_user,name='wrong_user'),
+    path("accounts/profile/",views.mfa_redirect,name='mfa_redirect'),
 
     #IT paths
     path('it/home/', views.it_home, name='it-home'),

@@ -24,6 +24,11 @@ def wrong_user(request):
     return render(request,"wrong_user.html")
 
 
+@login_required()
+def mfa_redirect(request):
+    return redirect('dashboardRedirect')
+
+
 #@login_required(login_url='/auth/login/')
 @login_required()
 def dashboardRedirect(request):
@@ -58,6 +63,8 @@ def it_home(request):
     items = Items.objects.all()
     context = {'items' : items}
     return render(request,'IT/item_management.html', context)
+
+
 
 #@login_required(login_url='/auth/login/')
 @login_required()
