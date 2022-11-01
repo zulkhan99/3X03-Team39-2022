@@ -3,12 +3,15 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import addItemForm, managerItemForm
+from .forms import addItemForm, managerItemForm, CustomUserCreationForm,CustomUserChangeForm, CustomChangeFormPassword
+
 from .models import Items, CustomUser, Inventory, Requests
 from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import login
+from django.contrib import messages
 
 import logging
 logger = logging.getLogger('main')
@@ -56,7 +59,54 @@ def it_home(request):
 def account_management(request):
     if not request.user.role == "A":
         return redirect("/wrong_user/")
-    return redirect("/admin/")
+
+    users = CustomUser.objects.all()
+    context = {'users' : users}
+    return render(request,'IT/account_management.html', context)
+
+def register_request(request):
+	if request.method == "POST":
+		form = CustomUserCreationForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			messages.success(request, "Registration successful." )
+			return redirect("/it/accounts/") 
+		messages.error(request, "Unsuccessful registration. Invalid information.")
+	form = CustomUserCreationForm()
+	return render (request,"registration/register.html", context={"register_form":form})
+
+def update_request(request,pk):
+    user = CustomUser.objects.get(id = pk)
+    form = CustomUserChangeForm(instance=user)
+
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            message = "Admin " + request.user.username + " updated user"
+            logger.info(message)
+            return redirect('account-management')
+
+    context = {'update_form' : form}
+    return render(request, 'registration/update.html', context)
+
+def update_password(request,pk):
+    user = CustomUser.objects.get(id = pk)
+    form = CustomChangeFormPassword(user)
+    if request.method == 'POST':
+        form = CustomChangeFormPassword(user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Password has been changed")
+            return redirect('account-management')
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+
+    form = CustomChangeFormPassword(user)
+    context = {'update_password_form' : form}
+    return render(request, 'registration/password.html', context)
+
 
 #admin add item
 @login_required(login_url='auth/login/')
