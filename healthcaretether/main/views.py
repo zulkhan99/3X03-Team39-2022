@@ -7,7 +7,8 @@ from .forms import addItemForm, managerItemForm, CustomUserCreationForm,CustomUs
 
 from .models import Items, CustomUser, Inventory, Requests
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
@@ -18,6 +19,33 @@ logger = logging.getLogger('main')
 # Create your views here.
 
 #authentication
+def loginView(request):
+    context={}
+    if request.method=="POST":
+        username=request.POST["username"]
+        password=request.POST["password"]
+        user=authenticate(username=username,password=password)
+        if user:
+            from mfa.helpers import has_mfa
+            res = has_mfa(username = username, request = request)  # has_mfa returns false or HttpResponseRedirect
+            if res:
+                return res
+            return create_session(request,user.username)
+        context["invalid"]=True
+    return render(request, "registration/login.html", context)
+
+def create_session(request,username):
+    user=CustomUser.objects.get(username=username)
+    user.backend='django.contrib.auth.backends.ModelBackend'
+    login(request, user)
+    return HttpResponseRedirect(reverse('dashboardRedirect'))
+    
+
+def logoutView(request):
+    logout(request)
+    return render(request,"registration/logout.html",{})
+
+
 def wrong_user(request):
     message = "User " + request.user.username + " not authorised to access page"
     logger.error(message)
@@ -42,14 +70,6 @@ def dashboardRedirect(request):
     elif current_user.role == "A":
         return redirect('/it/home/')
 
-#@login_required(login_url='/auth/login/')
-@login_required()
-def logout_request(request):
-    logout(request)
-    messages.info(request, "You have successfully logged out.")
-    message = "User " + request.user.username + " has logged out"
-    logger.info("message")
-    return redirect("/auth/login/")
 
 
 #admin views

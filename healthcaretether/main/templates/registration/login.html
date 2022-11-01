@@ -30,13 +30,28 @@
         <h3>Login</h3>
         <hr>
         <br>
-        <form method="post">
-          {% csrf_token %}
-          {% load crispy_forms_tags %}
-          {{ form|crispy}}
-          <button type="submit" class="btn btn-primary">Log In</button>
+        {% if invalid %}
+              <div class="alert alert-danger">Invalid Username or password</div>
+          {% endif %}
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+          <div class="form-group">
+            <div class="form-label-group">
+              <label for="inputUsername">Username</label>
+              <input type="text" id="inputUsername" name="username" class="form-control" placeholder="username" required="required" autofocus="autofocus">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-label-group">
+              <label for="inputPassword">Password</label>
+              <input type="password" id="inputPassword"  name="password" class="form-control" placeholder="Password" required="required">
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit">Login</button>
         </form>
       </div>
+  
 
       <!-- Image on right side of login form -->
       <div class="col-md-6 login-img">
