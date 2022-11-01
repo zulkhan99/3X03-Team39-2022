@@ -17,7 +17,7 @@ def loginView(request):
                 return res
             return create_session(request,user.username)
         context["invalid"]=True
-    return render(request, "login.html", context)
+    return render(request, "/main/templates/login.html", context)
 
 def create_session(request,username):
     user=CustomUser.objects.get(username=username)

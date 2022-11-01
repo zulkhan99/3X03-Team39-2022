@@ -98,7 +98,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     # ]
 
     hospital = models.ForeignKey(Hospital,on_delete=models.CASCADE, null=True)
-    passwordChangedAt = models.DateTimeField(default = datetime.now())
+    passwordChangedAt = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'username'
 
