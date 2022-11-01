@@ -26,9 +26,9 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-Populate database with hospitals
+Populate database
 ```
-python manage.py loaddata /fixtures/hospitals.json
+python manage.py loaddata fixtures/hospitals.json
 
 
 Create superuser
@@ -36,7 +36,7 @@ Create superuser
 python manage.py createsuperuser
 ```
 
-Once created, start the web app
+Start web app
 ```
 python manage.py runsslserver
 ```

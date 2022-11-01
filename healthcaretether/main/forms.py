@@ -1,4 +1,3 @@
-from turtle import textinput
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django import forms
 from django.forms import ModelForm, TextInput
