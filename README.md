@@ -29,7 +29,7 @@ python manage.py migrate
 Populate database with hospitals
 ```
 python manage.py loaddata /fixtures/hospitals.json
-
+```
 
 Create superuser
 ```
