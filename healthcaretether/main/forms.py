@@ -44,3 +44,11 @@ class managerItemForm(ModelForm):
         model = Inventory
         exclude = ['hospital', 'status']
         # fields = '__all__'
+
+
+class UnlockUsernameForm(forms.Form):
+    username_to_unlock = forms.CharField(max_length=50)
+
+
+class UnlockIPForm(forms.Form):
+    ip_to_unlock = forms.CharField( max_length=50)

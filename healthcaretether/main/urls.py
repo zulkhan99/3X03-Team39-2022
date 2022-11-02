@@ -21,6 +21,8 @@ urlpatterns = [
     path('it/add_assets/', views.add_assets, name='add-assets'),
     path('it/update_assets/<slug:slug>/', views.update_assets, name='update-assets'),
     path('it/delete_assets/<slug:slug>/', views.delete_assets, name='delete-assets'),
+    path('it/unlock_username/', views.unlock_username, name='unlock-username'),
+    path('it/unlock_ip/', views.unlock_ip, name='unlock-ip'),
 
     #staff paths
     path('staff/home/', views.staff_home, name='staff-home'),

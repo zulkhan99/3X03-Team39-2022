@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
-from .forms import addItemForm, managerItemForm, CustomUserCreationForm,CustomUserChangeForm, CustomChangeFormPassword
+from .forms import addItemForm, managerItemForm, CustomUserCreationForm,CustomUserChangeForm, CustomChangeFormPassword,UnlockIPForm,UnlockUsernameForm
 
 from .models import Items, CustomUser, Inventory, Requests
 from django.contrib import messages
@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.contrib import messages
+from axes.utils import reset
 
 import logging
 logger = logging.getLogger('main')
@@ -24,7 +25,7 @@ def loginView(request):
     if request.method=="POST":
         username=request.POST["username"]
         password=request.POST["password"]
-        user=authenticate(username=username,password=password)
+        user=authenticate(request=request,username=username,password=password)
         if user:
             from mfa.helpers import has_mfa
             res = has_mfa(username = username, request = request)  # has_mfa returns false or HttpResponseRedirect
@@ -194,6 +195,38 @@ def delete_assets(request, slug):
         logger.info(message)
         return redirect('it-home')
     return render(request, 'delete.html', {'obj' : item})
+
+
+#admin reset axes lockout
+def unlock_username(request):
+    if not request.user.role == "A":
+        return redirect("/wrong_user/")
+
+    if request.method == 'POST':
+        form = UnlockUsernameForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username_to_unlock")
+            reset(username = username)
+            message = username +" unlocked"
+            return redirect('account-management')
+    else:
+        form = UnlockUsernameForm()
+    return render(request, 'IT/unlock_username.html',{'form': form})
+
+def unlock_ip(request):
+    if not request.user.role == "A":
+        return redirect("/wrong_user/")
+
+    if request.method == 'POST':
+        form = UnlockIPForm(request.POST)
+        if form.is_valid():
+            ip = form.cleaned_data.get("ip_to_unlock")
+            reset(ip= ip)
+            message = ip +" unlocked"
+            return redirect('account-management')
+    else:
+        form = UnlockIPForm()
+    return render(request, 'IT/unlock_ip.html',{'form': form})
 
 #admin views ends
 
