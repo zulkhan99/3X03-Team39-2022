@@ -1,8 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from main.models import *
 from main.views import *
 
-
+@override_settings(AXES_ENABLED=False)
 class test_login(TestCase):
     def test_can_access_login_page(self):
         response = self.client.get("/auth/login")
