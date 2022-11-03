@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  web:
+    build: 
+      context: ./healthcaretether
+      dockerfile: Dockerfile
+<<<<<<< Updated upstream
+    command: gunicorn healthcaretether.wsgi:application --bind 0.0.0.0:8000
+=======
+    command: gunicorn healthcaretether.wsgi:application --bind 
+0.0.0.0:8000
+>>>>>>> Stashed changes
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - ./healthcaretether/.env.dev
+    depends_on:
+      - db
+<<<<<<< Updated upstream
+=======
+    environment:
+      - VIRTUAL_HOST=healthcaretether.xyz
+      - VIRTUAL_PORT=8000
+>>>>>>> Stashed changes
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./healthcaretether/.env.dev.db
+
+<<<<<<< Updated upstream
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
+=======
+volumes:
+  postgres_data:
+  static_volume:
+>>>>>>> Stashed changes
