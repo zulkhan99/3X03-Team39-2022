@@ -23,9 +23,25 @@ logger = logging.getLogger('main')
 def loginView(request):
     context={}
     if request.method=="POST":
-        username=request.POST["username"]
-        password=request.POST["password"]
-        user=authenticate(request=request,username=username,password=password)
+
+        #reCAPTCHA validation
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+            'secret': settings.RECAPTCHA_PRIVATE_KEY,
+            'response': recaptcha_response
+        }
+        data = urllib.parse.urlencode(values).encode()
+        req =  urllib.request.Request(url, data=data)
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+
+        if result['success']:
+            username=request.POST["username"]
+            password=request.POST["password"]
+            user=authenticate(username=username,password=password)
+
+
         if user:
             from mfa.helpers import has_mfa
             res = has_mfa(username = username, request = request)  # has_mfa returns false or HttpResponseRedirect
