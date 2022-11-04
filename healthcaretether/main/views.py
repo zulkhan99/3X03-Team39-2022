@@ -43,15 +43,15 @@ def loginView(request):
         if result['success']:
             username=request.POST["username"]
             password=request.POST["password"]
-            user=authenticate(username=username,password=password)
+            user=authenticate(request,username=username,password=password)
 
 
-        if user:
-            from mfa.helpers import has_mfa
-            res = has_mfa(username = username, request = request)  # has_mfa returns false or HttpResponseRedirect
-            if res:
-                return res
-            return create_session(request,user.username)
+            if user:
+                from mfa.helpers import has_mfa
+                res = has_mfa(username = username, request = request)  # has_mfa returns false or HttpResponseRedirect
+                if res:
+                    return res
+                return create_session(request,user.username)
         context["invalid"]=True
     return render(request, "registration/login.html", context)
 
