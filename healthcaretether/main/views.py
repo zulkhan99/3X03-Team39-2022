@@ -14,9 +14,13 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.contrib import messages
 from axes.utils import reset
+from django.conf import settings
+import urllib.request
+import json
 
 import logging
 logger = logging.getLogger('main')
+
 # Create your views here.
 
 #authentication
