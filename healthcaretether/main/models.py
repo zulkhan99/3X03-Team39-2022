@@ -10,12 +10,28 @@ from django.utils.text import slugify
 
 #hospital model
 class Hospital(models.Model):
+
+    class Meta:
+        permissions = [
+            ("it_home", "Admin can view IT home page"),
+            ("manager_home", "Manager can view Manager home page"),
+            ("staff_home", "Staff can view Staff home page")
+        ]
+
     name = models.CharField(max_length=40)
     def __str__(self):
         return self.name
 
 #items model
 class Items(models.Model):
+
+    class Meta: 
+        permissions = [
+            ("add_assets","Admin can add assets to the system"),
+            ("update_assets","Admin can update asset details"),
+            ("delete_assets","Admin can delete assets from system")
+        ]
+
     product_name = models.CharField(max_length=40)
     slug = models.SlugField(null=True, unique=True, max_length=40)
 
@@ -31,6 +47,17 @@ class Items(models.Model):
 
 #inventory model
 class Inventory(models.Model):
+
+    class Meta:
+        permissions = [
+            ("inventory_management", "Manager can manage inventory"),
+            ("inventory_list", "Manager can view inventory"),
+            ("manager_update_assets", "Manager can update inventory information"),
+            ("manager_delete_assets", "Manager can delete inventory"),
+            ("select_list", "Manager can select inventory"),
+            ("select", "Manager can selct from global inventory")
+        ]
+
     hospital = models.ForeignKey(Hospital,on_delete=models.CASCADE)
     item = models.ForeignKey(Items,on_delete=models.CASCADE)
     quantity = models.IntegerField()
@@ -51,6 +78,19 @@ class Inventory(models.Model):
 
 #request model
 class Requests(models.Model):
+
+    class Meta:
+        permissions = [
+            ("requested_list", "Staff can view request list"),
+            ("staff_request", "Staff can request for inventory"),
+            ("request_to", "Manager can view requests by staff"),
+            ("manager_update_request_to", "Manager can update the request for inventory"),
+            ("manager_delete_request_to", "Manager can delete the request for inventory"),
+            ("request_from_list", "Manager can view the list of external requests"),
+            ("manager_request_from", "Manager can edit the external request"),
+            ("approve", "Manager can approve the external request")
+        ]
+
     inventory = models.ForeignKey(Inventory,on_delete=models.CASCADE)
     requestBy = models.IntegerField()
     requestAcceptedFrom = models.IntegerField()
@@ -75,6 +115,15 @@ class Requests(models.Model):
 
 #custom user model
 class CustomUser(AbstractBaseUser,PermissionsMixin):
+
+    class meta:
+        permissions = [
+            ("account_management", "Admin can view account details"),
+            ("register_request", "Admin can register accounts to system"),
+            ("update_request","Admin can update account details"),
+            ("update_password","Admin can update account password")
+        ]
+        
     username = models.CharField(max_length=30, unique=True)
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from .forms import addItemForm, managerItemForm, CustomUserCreationForm,CustomUserChangeForm, CustomChangeFormPassword,UnlockIPForm,UnlockUsernameForm
 
+from main.access_control import setPermissions
 from .models import Items, CustomUser, Inventory, Requests
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -82,13 +83,18 @@ def mfa_redirect(request):
 @login_required()
 def dashboardRedirect(request):
     current_user = request.user
+    current_user.groups.clear()
+    admin_group, manager_group, staff_group = setPermissions()
     message = "User " + current_user.username + " has logged in"
     logger.info(message)
     if current_user.role == "S":
-         return redirect('/staff/home/')
+        current_user.groups.add(staff_group)
+        return redirect('/staff/home/')
     elif current_user.role == "M":
+        current_user.groups.add(manager_group)
         return redirect('/manager/home/')
     elif current_user.role == "A":
+        current_user.groups.add(admin_group)
         return redirect('/it/home/')
 
 
@@ -98,7 +104,7 @@ def dashboardRedirect(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def it_home(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.it_home"):
         return redirect("/wrong_user/")
 
     items = Items.objects.all()
@@ -110,7 +116,7 @@ def it_home(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def account_management(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.account_management"):
         return redirect("/wrong_user/")
 
     users = CustomUser.objects.all()
@@ -118,17 +124,23 @@ def account_management(request):
     return render(request,'IT/account_management.html', context)
 
 def register_request(request):
-	if request.method == "POST":
-		form = CustomUserCreationForm(request.POST)
-		if form.is_valid():
-			user = form.save()
-			messages.success(request, "Registration successful." )
-			return redirect("/it/accounts/") 
-		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = CustomUserCreationForm()
-	return render (request,"registration/register.html", context={"register_form":form})
+    if not request.user.has_perm("main.register_request"):
+        return redirect("/wrong_user/")
+    else:
+        if request.method == "POST":
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                messages.success(request, "Registration successful." )
+                return redirect("/it/accounts/") 
+            messages.error(request, "Unsuccessful registration. Invalid information.")
+        form = CustomUserCreationForm()
+        return render (request,"registration/register.html", context={"register_form":form})
 
 def update_request(request,pk):
+    if not request.user.has_perm("main.update_request"):
+        return redirect("/wrong_user/")
+
     user = CustomUser.objects.get(id = pk)
     form = CustomUserChangeForm(instance=user)
 
@@ -144,6 +156,9 @@ def update_request(request,pk):
     return render(request, 'registration/update.html', context)
 
 def update_password(request,pk):
+    if not request.user.has_perm("main.update_password"):
+        return redirect("/wrong_user/")
+
     user = CustomUser.objects.get(id = pk)
     form = CustomChangeFormPassword(user)
     if request.method == 'POST':
@@ -165,8 +180,9 @@ def update_password(request,pk):
 #@login_required(login_url='auth/login/')
 @login_required()
 def add_assets(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.add_assets"):
         return redirect("/wrong_user/")
+
 
     form = addItemForm()
     if request.method == 'POST':
@@ -184,8 +200,9 @@ def add_assets(request):
 
 @login_required(login_url='auth/login/')
 def update_assets(request, slug):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.update_assets"):
         return redirect("/wrong_user/")
+
     slug = get_object_or_404(Items,slug=slug)
     item = Items.objects.get(id = slug.id)
     form = addItemForm(instance=item)
@@ -204,7 +221,7 @@ def update_assets(request, slug):
 #admin Delete item
 @login_required(login_url='auth/login/')
 def delete_assets(request, slug):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.delete_assets"):
         return redirect("/wrong_user/")
     
     slug = get_object_or_404(Items,slug=slug)
