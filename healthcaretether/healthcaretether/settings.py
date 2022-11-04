@@ -212,8 +212,10 @@ LOGGING = {
             'formatter': "main_formatter",
         },
         'file':{
-            'class': "logging.FileHandler",
+            'class':'logging.handlers.RotatingFileHandler',
             'filename': 'info.log',
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 5,
             'formatter': "main_formatter",
         },
     },
@@ -234,4 +236,4 @@ AXES_META_PRECEDENCE_ORDER = [
 
 #axes settings
 AXES_LOCK_OUT_BY_USER_OR_IP=True
-AXES_FAILURE_LIMIT=5
+AXES_FAILURE_LIMIT=10
