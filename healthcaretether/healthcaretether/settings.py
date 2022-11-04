@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'mfa',
     'sslserver',
     'axes',
+    'captcha',
 ]
 
 
@@ -122,6 +123,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS' :{
+            'min_length' : 12,
+        },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -196,6 +200,10 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Strict'
 # SESSION_COOKIE_SECURE = True
 
+#Recaptcha Sutff
+RECAPTCHA_PUBLIC_KEY = '6LdSRtMiAAAAAOHlNty3IFaz49VitVtEcyLspr69'
+RECAPTCHA_PRIVATE_KEY = '6LdSRtMiAAAAADrDYWhjW_ZFGpgz_zGhVDjbHxIW'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -212,10 +220,8 @@ LOGGING = {
             'formatter': "main_formatter",
         },
         'file':{
-            'class':'logging.handlers.RotatingFileHandler',
+            'class': "logging.FileHandler",
             'filename': 'info.log',
-            'maxBytes': 1024*1024*5, # 5 MB
-            'backupCount': 5,
             'formatter': "main_formatter",
         },
     },
@@ -236,4 +242,4 @@ AXES_META_PRECEDENCE_ORDER = [
 
 #axes settings
 AXES_LOCK_OUT_BY_USER_OR_IP=True
-AXES_FAILURE_LIMIT=10
+AXES_FAILURE_LIMIT=5
