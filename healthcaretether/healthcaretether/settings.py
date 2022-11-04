@@ -28,12 +28,20 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 1
 
-ALLOWED_HOSTS = []
+DEBUG = False
+#DEBUG = int(os.environ.get("DEBUG", default=0))
+
+ALLOWED_HOSTS =  ['healthcaretether.xyz']
+
+CSRF_TRUSTED_ORIGINS = ['https://healthcaretether.xyz']
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+
+
+
 
 # CSRF_TRUSTED_ORIGINS = ['http://localhost:1337']
-
 
 # Application definition
 
@@ -95,23 +103,23 @@ AUTHENTICATION_BACKENDS = [
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-#         "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-#         "USER": os.environ.get("SQL_USER", "user"),
-#         "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-#         "HOST": os.environ.get("SQL_HOST", "localhost"),
-#         "PORT": os.environ.get("SQL_PORT", "5432"),
-#     }
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -148,10 +156,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'static')
-]
+STATIC_ROOT = '/home/app/web/static/'
+#STATIC_ROOT = BASE_DIR / 'staticfiles/'
+#STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR,'static'),
+#    '/home/app/web/static/'
+#]
+#    os.path.join(BASE_DIR,'static')
+#]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -181,11 +193,13 @@ PASSWORD_HASHERS = DEFAULT_PASSWORD_HASHERS # Comment if PASSWORD_HASHER already
 PASSWORD_HASHERS += ['mfa.recovery.Hash'] 
 RECOVERY_ITERATION = 350000 #Number of iteration for recovery code, higher is more secure, but uses more resources for generation and check...
 
-TOKEN_ISSUER_NAME="PROJECT_NAME"      #TOTP Issuer name
+TOKEN_ISSUER_NAME="healthcaretether"      #TOTP Issuer name
 
-U2F_APPID="https://localhost:8000"    #URL For U2F
-FIDO_SERVER_ID="localhost"      # Server rp id for FIDO2, it is the full domain of your project
-FIDO_SERVER_NAME="PROJECT_NAME"
+
+U2F_APPID="https://healthcaretether.xyz"    #URL For U2F
+FIDO_SERVER_ID="healthcaretether.xyz"      # Server rp id for FIDO2, it is the full domain of your project
+FIDO_SERVER_NAME="healthcaretether"
+
 
 #Session settings
 SESSION_ENGINE ='django.contrib.sessions.backends.db'
@@ -194,7 +208,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Strict'
-# SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 LOGGING = {
     'version': 1,
@@ -212,8 +226,10 @@ LOGGING = {
             'formatter': "main_formatter",
         },
         'file':{
-            'class': "logging.FileHandler",
+            'class':'logging.handlers.RotatingFileHandler',
             'filename': 'info.log',
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 5,
             'formatter': "main_formatter",
         },
     },
@@ -227,6 +243,7 @@ LOGGING = {
 
 }
 
+
 AXES_META_PRECEDENCE_ORDER = [
     'HTTP_X_FORWARDED_FOR',
     'REMOTE_ADDR',
@@ -234,4 +251,8 @@ AXES_META_PRECEDENCE_ORDER = [
 
 #axes settings
 AXES_LOCK_OUT_BY_USER_OR_IP=True
-AXES_FAILURE_LIMIT=5
+AXES_FAILURE_LIMIT=10
+
+
+
+
