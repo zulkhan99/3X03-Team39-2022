@@ -1,8 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from main.models import *
 from main.views import *
 
-
+@override_settings(AXES_ENABLED=False)
 class test_login(TestCase):
     def test_can_access_login_page(self):
         response = self.client.get("/auth/login")
@@ -21,3 +21,5 @@ class test_login(TestCase):
         self.assertEqual(response, True)
         test = self.client.post('/auth/login', {'username':'testuser', 'password': '12345'})
         self.assertEqual(test.status_code, 302)
+
+#testing jenkins

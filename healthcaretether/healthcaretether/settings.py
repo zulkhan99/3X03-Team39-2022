@@ -31,23 +31,11 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = False
 #DEBUG = int(os.environ.get("DEBUG", default=0))
-<<<<<<< Updated upstream
 
 ALLOWED_HOSTS =  ['healthcaretether.xyz']
 
 CSRF_TRUSTED_ORIGINS = ['https://healthcaretether.xyz']
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-
-=======
-
-ALLOWED_HOSTS =  ['healthcaretether.xyz']
-
-CSRF_TRUSTED_ORIGINS = ['https://healthcaretether.xyz']
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
->>>>>>> Stashed changes
-
-
 
 # CSRF_TRUSTED_ORIGINS = ['http://localhost:1337']
 
@@ -66,10 +54,7 @@ INSTALLED_APPS = [
     'mfa',
     'sslserver',
     'axes',
-<<<<<<< Updated upstream
-=======
-    'captcha'
->>>>>>> Stashed changes
+    'captcha',
 ]
 
 
@@ -133,6 +118,7 @@ DATABASES = {
 #     }
 # }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -142,6 +128,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS' :{
+            'min_length' : 12,
+        },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -169,7 +158,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/home/app/web/static/'
-<<<<<<< Updated upstream
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
+
 #STATIC_ROOT = BASE_DIR / 'staticfiles/'
 #STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR,'static'),
@@ -177,14 +169,16 @@ STATIC_ROOT = '/home/app/web/static/'
 #]
 #    os.path.join(BASE_DIR,'static')
 #]
-=======
->>>>>>> Stashed changes
+#STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'main.CustomUser'
+
+#LOGIN_REDIRECT_URL = "/"
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 LOGIN_URL="/auth/login"
@@ -223,6 +217,7 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Strict'
 SESSION_COOKIE_SECURE = True
+
 
 LOGGING = {
     'version': 1,
@@ -265,12 +260,4 @@ AXES_META_PRECEDENCE_ORDER = [
 
 #axes settings
 AXES_LOCK_OUT_BY_USER_OR_IP=True
-<<<<<<< Updated upstream
 AXES_FAILURE_LIMIT=10
-
-
-
-
-=======
-AXES_FAILURE_LIMIT=10
->>>>>>> Stashed changes

@@ -14,24 +14,44 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import login
 from django.contrib import messages
 from axes.utils import reset
+from django.conf import settings
+import urllib.request
+import json
 
 import logging
 logger = logging.getLogger('main')
+
 # Create your views here.
 
 #authentication
 def loginView(request):
     context={}
     if request.method=="POST":
-        username=request.POST["username"]
-        password=request.POST["password"]
-        user=authenticate(request=request,username=username,password=password)
-        if user:
-            from mfa.helpers import has_mfa
-            res = has_mfa(username = username, request = request)  # has_mfa returns false or HttpResponseRedirect
-            if res:
-                return res
-            return create_session(request,user.username)
+
+        #reCAPTCHA validation
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+            'secret': settings.RECAPTCHA_PRIVATE_KEY,
+            'response': recaptcha_response
+        }
+        data = urllib.parse.urlencode(values).encode()
+        req =  urllib.request.Request(url, data=data)
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+
+        if result['success']:
+            username=request.POST["username"]
+            password=request.POST["password"]
+            user=authenticate(request,username=username,password=password)
+
+
+            if user:
+                from mfa.helpers import has_mfa
+                res = has_mfa(username = username, request = request)  # has_mfa returns false or HttpResponseRedirect
+                if res:
+                    return res
+                return create_session(request,user.username)
         context["invalid"]=True
     return render(request, "registration/login.html", context)
 
