@@ -54,6 +54,8 @@ def loginView(request):
                 if res:
                     return res
                 return create_session(request,user.username)
+        failed_message = "Login failed with username: {} ,password: {}, headers: {}".format(request.POST["username"], request.POST["password"], request.META)
+        logger.error(failed_message)
         context["invalid"]=True
     return render(request, "registration/login.html", context)
 
@@ -88,6 +90,8 @@ def dashboardRedirect(request):
     admin_group, manager_group, staff_group = setPermissions()
     message = "User " + current_user.username + " has logged in"
     logger.info(message)
+    success_message = "Login sucess with username: {}, headers: {}".format(current_user.username, request.META)
+    logger.info(success_message)
     if current_user.role == "S":
         current_user.groups.add(staff_group)
         return redirect('/staff/home/')
