@@ -23,6 +23,7 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ('username','role','hospital')
+        exclude = ['slug']
 
 class CustomChangeFormPassword(SetPasswordForm):
     class Meta:
