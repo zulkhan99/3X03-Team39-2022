@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from .models import Hospital, Items, Inventory, Requests, CustomUser
+from .models import Hospital, Items, Inventory, Requests, AccountManagement
 
 from main.views import *
 
@@ -76,10 +76,12 @@ def setPermissions():
         elif perm.codename == "approve":
             manager_group.permissions.add(perm)
 
-    content_type = ContentType.objects.get_for_model(CustomUser, for_concrete_model=False)
-    customuser_permission = Permission.objects.filter(content_type=content_type)
+    content_type = ContentType.objects.get_for_model(AccountManagement)
+    accountManagement_permission = Permission.objects.filter(content_type=content_type)
+    
+    logger.error([perm.codename for perm in accountManagement_permission])
 
-    for perm in customuser_permission:
+    for perm in accountManagement_permission:
 
         if perm.codename == "it_home":
             admin_group.permissions.add(perm)

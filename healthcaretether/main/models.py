@@ -108,20 +108,6 @@ class Requests(models.Model):
 
 #custom user model
 class CustomUser(AbstractBaseUser,PermissionsMixin):
-    
-    class meta:
-        proxy = True
-        permissions = [
-            ("it_home", "Admin can view IT home page"),
-            ("manager_home", "Manager can view Manager home page"),
-            ("staff_home", "Staff can view Staff home page"),
-            ("account_management", "Admin can view account details"),
-            ("register_request", "Admin can register accounts to system"),
-            ("update_request","Admin can update account details"),
-            ("update_password","Admin can update account password"),
-            ("unlock_username","Admin can unlock a locked out account"),
-            ("unlock_ip","Admin can unlock a locked out ip")
-        ]
 
     username = models.CharField(max_length=30, unique=True)
     is_staff = models.BooleanField(default=True)
@@ -151,3 +137,18 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     USERNAME_FIELD = 'username'
 
     objects = CustomUserManager()
+
+class AccountManagement(models.Model):
+    
+    class meta:
+        permissions = [
+            ("it_home", "Admin can view IT home page"),
+            ("manager_home", "Manager can view Manager home page"),
+            ("staff_home", "Staff can view Staff home page"),
+            ("account_management", "Admin can view account details"),
+            ("register_request", "Admin can register accounts to system"),
+            ("update_request","Admin can update account details"),
+            ("update_password","Admin can update account password"),
+            ("unlock_username","Admin can unlock a locked out account"),
+            ("unlock_ip","Admin can unlock a locked out ip")
+        ]
