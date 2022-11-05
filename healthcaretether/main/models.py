@@ -11,13 +11,6 @@ from django.utils.text import slugify
 #hospital model
 class Hospital(models.Model):
     
-    class Meta:
-        permissions = [
-            ("it_home", "Admin can view IT home page"),
-            ("manager_home", "Manager can view Manager home page"),
-            ("staff_home", "Staff can view Staff home page")
-        ]
-
     name = models.CharField(max_length=40)
     def __str__(self):
         return self.name
@@ -117,7 +110,11 @@ class Requests(models.Model):
 class CustomUser(AbstractBaseUser,PermissionsMixin):
     
     class meta:
+        proxy = True
         permissions = [
+            ("it_home", "Admin can view IT home page"),
+            ("manager_home", "Manager can view Manager home page"),
+            ("staff_home", "Staff can view Staff home page"),
             ("account_management", "Admin can view account details"),
             ("register_request", "Admin can register accounts to system"),
             ("update_request","Admin can update account details"),

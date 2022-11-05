@@ -15,7 +15,6 @@ def setPermissions():
 
     content_type = ContentType.objects.get_for_model(Items)
     item_permission = Permission.objects.filter(content_type=content_type)
-    logger.error([perm.codename for perm in item_permission])
 
     for perm in item_permission:
         if perm.codename == "add_assets":
@@ -77,12 +76,11 @@ def setPermissions():
         elif perm.codename == "approve":
             manager_group.permissions.add(perm)
 
-    content_type = ContentType.objects.get_for_model(Hospital)
-    hospital_permission = Permission.objects.filter(content_type=content_type)
-    
-    logger.error([perm.codename for perm in hospital_permission])
+    content_type = ContentType.objects.get_for_model(CustomUser, for_concrete_model=False)
+    customuser_permission = Permission.objects.filter(content_type=content_type)
 
-    for perm in hospital_permission:
+    for perm in customuser_permission:
+
         if perm.codename == "it_home":
             admin_group.permissions.add(perm)
 
@@ -92,13 +90,7 @@ def setPermissions():
         elif perm.codename == "staff_home":
             staff_group.permissions.add(perm)
 
-    content_type = ContentType.objects.get_for_model(CustomUser)
-    customuser_permission = Permission.objects.filter(content_type=content_type)
-    
-    logger.error([perm.codename for perm in customuser_permission])
-
-    for perm in customuser_permission:
-        if perm.codename == "account_management":
+        elif perm.codename == "account_management":
             admin_group.permissions.add(perm)
 
         elif perm.codename == "register_request":
