@@ -18,6 +18,8 @@ from django.conf import settings
 import urllib.request
 import json
 
+from main.access_control import setPermissions
+
 import logging
 logger = logging.getLogger('main')
 
@@ -84,13 +86,20 @@ def mfa_redirect(request):
 @login_required()
 def dashboardRedirect(request):
     current_user = request.user
-    success_message = "Login sucesss with username: {}, headers: {}".format(current_user.username, request.META)
+    current_user.groups.clear()
+    admin_group, manager_group, staff_group = setPermissions()
+    message = "User " + current_user.username + " has logged in"
+    logger.info(message)
+    success_message = "Login sucess with username: {}, headers: {}".format(current_user.username, request.META)
     logger.info(success_message)
     if current_user.role == "S":
-         return redirect('/staff/home/')
+        current_user.groups.add(staff_group)
+        return redirect('/staff/home/')
     elif current_user.role == "M":
+        current_user.groups.add(manager_group)
         return redirect('/manager/home/')
     elif current_user.role == "A":
+        current_user.groups.add(admin_group)
         return redirect('/it/home/')
 
 
@@ -100,7 +109,7 @@ def dashboardRedirect(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def it_home(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.it_home"):
         return redirect("/wrong_user/")
 
     items = Items.objects.all()
@@ -112,7 +121,7 @@ def it_home(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def account_management(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.account_management"):
         return redirect("/wrong_user/")
 
     users = CustomUser.objects.all()
@@ -120,17 +129,23 @@ def account_management(request):
     return render(request,'IT/account_management.html', context)
 
 def register_request(request):
-	if request.method == "POST":
-		form = CustomUserCreationForm(request.POST)
-		if form.is_valid():
-			user = form.save()
-			messages.success(request, "Registration successful." )
-			return redirect("/it/accounts/") 
-		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = CustomUserCreationForm()
-	return render (request,"registration/register.html", context={"register_form":form})
+    if not request.user.has_perm("main.register_request"):
+        return redirect("/wrong_user/")
+    else:
+        if request.method == "POST":
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                messages.success(request, "Registration successful." )
+                return redirect("/it/accounts/") 
+            messages.error(request, "Unsuccessful registration. Invalid information.")
+        form = CustomUserCreationForm()
+        return render (request,"registration/register.html", context={"register_form":form})
 
 def update_request(request,pk):
+    if not request.user.has_perm("main.update_request"):
+        return redirect("/wrong_user/")
+
     user = CustomUser.objects.get(id = pk)
     form = CustomUserChangeForm(instance=user)
 
@@ -146,6 +161,9 @@ def update_request(request,pk):
     return render(request, 'registration/update.html', context)
 
 def update_password(request,pk):
+    if not request.user.has_perm("main.update_password"):
+        return redirect("/wrong_user/")
+
     user = CustomUser.objects.get(id = pk)
     form = CustomChangeFormPassword(user)
     if request.method == 'POST':
@@ -167,7 +185,7 @@ def update_password(request,pk):
 #@login_required(login_url='auth/login/')
 @login_required()
 def add_assets(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.add_assets"):
         return redirect("/wrong_user/")
 
     form = addItemForm()
@@ -186,7 +204,7 @@ def add_assets(request):
 
 @login_required(login_url='auth/login/')
 def update_assets(request, slug):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.update_assets"):
         return redirect("/wrong_user/")
     slug = get_object_or_404(Items,slug=slug)
     item = Items.objects.get(id = slug.id)
@@ -206,7 +224,7 @@ def update_assets(request, slug):
 #admin Delete item
 @login_required(login_url='auth/login/')
 def delete_assets(request, slug):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.delete_assets"):
         return redirect("/wrong_user/")
     
     slug = get_object_or_404(Items,slug=slug)
@@ -221,7 +239,7 @@ def delete_assets(request, slug):
 
 #admin reset axes lockout
 def unlock_username(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.unlock_username"):
         return redirect("/wrong_user/")
 
     if request.method == 'POST':
@@ -236,7 +254,7 @@ def unlock_username(request):
     return render(request, 'IT/unlock_username.html',{'form': form})
 
 def unlock_ip(request):
-    if not request.user.role == "A":
+    if not request.user.has_perm("main.unlock_ip"):
         return redirect("/wrong_user/")
 
     if request.method == 'POST':
@@ -259,7 +277,7 @@ def unlock_ip(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def staff_home(request):
-    if not request.user.role == "S":
+    if not request.user.has_perm("main.staff_home"):
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -271,7 +289,7 @@ def staff_home(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def requested_list(request):
-    if not request.user.role == "S":
+    if not request.user.has_perm("main.requested_list"):
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -282,7 +300,7 @@ def requested_list(request):
 #staff Change inventory status to SUBMITTED
 @login_required(login_url='/auth/login/')
 def staff_request(request,slug):
-    if not request.user.role == "S":
+    if not request.user.has_perm("main.staff_request"):
         return redirect("/wrong_user/")
 
     slug = get_object_or_404(Items,slug=slug)
@@ -302,7 +320,7 @@ def staff_request(request,slug):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def manager_home(request):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.manager_home"):
         return redirect("/wrong_user/")
     return render(request,'manager/request_management.html')
 
@@ -310,7 +328,7 @@ def manager_home(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def inventory_management(request):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.inventory_management"):
         return redirect("/wrong_user/")
     return render(request, 'manager/inventory_management.html')
 
@@ -318,7 +336,7 @@ def inventory_management(request):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def inventory_list(request):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.inventory_list"):
         return redirect("/wrong_user/")
     
     userHospID = request.user.hospital
@@ -329,7 +347,7 @@ def inventory_list(request):
 #mananger Update inventory item
 @login_required(login_url='auth/login/')
 def manager_update_assets(request, slug):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.manager_update_assets"):
         return redirect("/wrong_user/")
     
     userHospID = request.user.hospital
@@ -351,7 +369,7 @@ def manager_update_assets(request, slug):
 #mananger Delete inventory item
 @login_required(login_url='auth/login/')
 def manager_delete_assets(request, slug):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.manager_delete_assets"):
         return redirect("/wrong_user/")
     userHospID = request.user.hospital
     slug = get_object_or_404(Items,slug=slug)
@@ -367,7 +385,7 @@ def manager_delete_assets(request, slug):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def select_list(request):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.select_list"):
         return redirect("/wrong_user/")
     
     userHospID = request.user.hospital
@@ -379,7 +397,7 @@ def select_list(request):
 #mananger Select item from Global List
 @login_required(login_url='/auth/login/')
 def select(request,slug):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.select"):
         return redirect("/wrong_user/")
     
     slug = get_object_or_404(Items,slug=slug)
@@ -394,7 +412,7 @@ def select(request,slug):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def request_to(request):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.request_to"):
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -405,7 +423,7 @@ def request_to(request):
 #mananger Update the staff requested item status to PENDING and include in REQUEST TABLE
 @login_required(login_url='/auth/login/')
 def manager_update_request_to(request,slug):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.manager_update_request_to"):
         return redirect("/wrong_user/")
 
     slug = get_object_or_404(Items,slug=slug)
@@ -422,7 +440,7 @@ def manager_update_request_to(request,slug):
 #mananger Update the staff requested item status to NONE
 @login_required(login_url='/auth/login/')
 def manager_delete_request_to(request,slug):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.manager_delete_request_to"):
         return redirect("/wrong_user/")
 
     slug = get_object_or_404(Items,slug=slug)
@@ -437,7 +455,7 @@ def manager_delete_request_to(request,slug):
 #@login_required(login_url='/auth/login/')
 @login_required()
 def request_from_list(request):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.request_from_list"):
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -449,7 +467,7 @@ def request_from_list(request):
 #mananger Update the REQUEST TABLE field "requestedAcceptedFrom" with the hosp ID and the item inventory status to NONE
 @login_required(login_url='/auth/login/')
 def manager_request_from(request, slug):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.manager_request_from"):
         return redirect("/wrong_user/")
 
 
@@ -469,7 +487,7 @@ def manager_request_from(request, slug):
 #mananger APPROVE request by other hospital
 @login_required(login_url='/auth/login/')
 def approve(request, slug):
-    if not request.user.role == "M":
+    if not request.user.has_perm("main.approve"):
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
