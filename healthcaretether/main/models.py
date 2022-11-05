@@ -140,7 +140,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
 
 class AccountManagement(models.Model):
     
-    class meta:
+    class Meta:
         permissions = [
             ("it_home", "Admin can view IT home page"),
             ("manager_home", "Manager can view Manager home page"),
