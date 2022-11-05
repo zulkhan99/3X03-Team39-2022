@@ -8,14 +8,14 @@ class CustomUserManager(BaseUserManager):
             username = username,
             **extra_fields
         )
+        extra_fields.setdefault('role','A'),
         user.set_password(password)
         user.save()
         return user
     
     #method for creating superuser
     def create_superuser(self,username,password,**extra_fields):
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_superuser', False)
         extra_fields.setdefault('role','A')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(('Superuser must have is_superuser=True.'))
+
         return self.create_user(username,password,**extra_fields)
