@@ -142,11 +142,12 @@ def register_request(request):
         form = CustomUserCreationForm()
         return render (request,"registration/register.html", context={"register_form":form})
 
-def update_request(request,pk):
+def update_request(request,slug):
     if not request.user.has_perm("main.update_request"):
         return redirect("/wrong_user/")
 
-    user = CustomUser.objects.get(id = pk)
+    slug = get_object_or_404(CustomUser,slug=slug)
+    user = CustomUser.objects.get(id = slug.id)
     form = CustomUserChangeForm(instance=user)
 
     if request.method == 'POST':
@@ -160,11 +161,11 @@ def update_request(request,pk):
     context = {'update_form' : form}
     return render(request, 'registration/update.html', context)
 
-def update_password(request,pk):
+def update_password(request,slug):
     if not request.user.has_perm("main.update_password"):
         return redirect("/wrong_user/")
-
-    user = CustomUser.objects.get(id = pk)
+    slug = get_object_or_404(CustomUser,slug=slug)
+    user = CustomUser.objects.get(id = slug.id)
     form = CustomChangeFormPassword(user)
     if request.method == 'POST':
         form = CustomChangeFormPassword(user, request.POST)
