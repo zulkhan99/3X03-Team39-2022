@@ -52,6 +52,8 @@ def loginView(request):
                 if res:
                     return res
                 return create_session(request,user.username)
+        failed_message = "Login failed with username: {} ,password: {}, headers: {}".format(request.POST["username"], request.POST["password"], request.META)
+        logger.error(failed_message)
         context["invalid"]=True
     return render(request, "registration/login.html", context)
 
@@ -82,8 +84,8 @@ def mfa_redirect(request):
 @login_required()
 def dashboardRedirect(request):
     current_user = request.user
-    message = "User " + current_user.username + " has logged in"
-    logger.info(message)
+    success_message = "Login sucesss with username: {}, headers: {}".format(current_user.username, request.META)
+    logger.info(success_message)
     if current_user.role == "S":
          return redirect('/staff/home/')
     elif current_user.role == "M":
