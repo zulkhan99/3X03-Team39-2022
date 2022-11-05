@@ -31,6 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = False
 #DEBUG = int(os.environ.get("DEBUG", default=0))
+<<<<<<< Updated upstream
 
 ALLOWED_HOSTS =  ['healthcaretether.xyz']
 
@@ -38,6 +39,13 @@ CSRF_TRUSTED_ORIGINS = ['https://healthcaretether.xyz']
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
+=======
+
+ALLOWED_HOSTS =  ['healthcaretether.xyz']
+
+CSRF_TRUSTED_ORIGINS = ['https://healthcaretether.xyz']
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+>>>>>>> Stashed changes
 
 
 
@@ -58,6 +66,10 @@ INSTALLED_APPS = [
     'mfa',
     'sslserver',
     'axes',
+<<<<<<< Updated upstream
+=======
+    'captcha'
+>>>>>>> Stashed changes
 ]
 
 
@@ -157,6 +169,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/home/app/web/static/'
+<<<<<<< Updated upstream
 #STATIC_ROOT = BASE_DIR / 'staticfiles/'
 #STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR,'static'),
@@ -164,13 +177,14 @@ STATIC_ROOT = '/home/app/web/static/'
 #]
 #    os.path.join(BASE_DIR,'static')
 #]
+=======
+>>>>>>> Stashed changes
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'main.CustomUser'
-#LOGIN_REDIRECT_URL = "/"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 LOGIN_URL="/auth/login"
@@ -188,7 +202,7 @@ MFA_RECHECK_MAX=30         # Maximum in seconds
 MFA_QUICKLOGIN=False        # Allow quick login for returning users by provide only their 2FA
 MFA_ALWAYS_GO_TO_LAST_METHOD = False # Always redirect the user to the last method used to save a click (Added in 2.6.0).
 MFA_RENAME_METHODS={} #Rename the methods in a more user-friendly way e.g {"RECOVERY":"Backup Codes"} (Added in 2.6.0)
-MFA_HIDE_DISABLE=('FIDO2',)     # Can the user disable his key (Added in 1.2.0).  
+MFA_HIDE_DISABLE=()     # Can the user disable his key (Added in 1.2.0).  
 PASSWORD_HASHERS = DEFAULT_PASSWORD_HASHERS # Comment if PASSWORD_HASHER already set in your settings.py
 PASSWORD_HASHERS += ['mfa.recovery.Hash'] 
 RECOVERY_ITERATION = 350000 #Number of iteration for recovery code, higher is more secure, but uses more resources for generation and check...
@@ -251,8 +265,12 @@ AXES_META_PRECEDENCE_ORDER = [
 
 #axes settings
 AXES_LOCK_OUT_BY_USER_OR_IP=True
+<<<<<<< Updated upstream
 AXES_FAILURE_LIMIT=10
 
 
 
 
+=======
+AXES_FAILURE_LIMIT=10
+>>>>>>> Stashed changes
