@@ -31,7 +31,7 @@
         <hr>
         <br>
         {% if invalid %}
-              <div class="alert alert-danger">Invalid Username or password</div>
+              <div class="alert alert-danger">Invalid Username, Password or reCAPTCHA.</div>
           {% endif %}
         <form action="{% url 'login' %}" method="post">
             {% csrf_token %}
