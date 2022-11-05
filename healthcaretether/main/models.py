@@ -2,7 +2,7 @@ from datetime import datetime
 from random import choice, choices
 from re import M
 
-from django.core.validators import validate_unicode_slug
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from .managers import CustomUserManager
@@ -111,7 +111,7 @@ class Requests(models.Model):
 #custom user model
 class CustomUser(AbstractBaseUser,PermissionsMixin):
 
-    username = models.CharField(max_length=30, unique=True, validators=[validate_unicode_slug])
+    username = models.CharField(max_length=30, unique=True, validators=[RegexValidator(regex="^[a-zA-Z0-9_]*$", message="Only Alphanumeric and Underscore Allowed!")])
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     first_name = 'a'
