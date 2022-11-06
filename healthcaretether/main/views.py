@@ -110,6 +110,8 @@ def dashboardRedirect(request):
 @login_required()
 def it_home(request):
     if not request.user.has_perm("main.it_home"):
+        message = request.user.username + " tried to access the IT it_home page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     items = Items.objects.all()
@@ -122,6 +124,8 @@ def it_home(request):
 @login_required()
 def account_management(request):
     if not request.user.has_perm("main.account_management"):
+        message = request.user.username + " tried to access the IT account_management page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     users = CustomUser.objects.all()
@@ -130,6 +134,8 @@ def account_management(request):
 
 def register_request(request):
     if not request.user.has_perm("main.register_request"):
+        message = request.user.username + " tried to access the IT register_request page."
+        logger.error(message)
         return redirect("/wrong_user/")
     else:
         if request.method == "POST":
@@ -144,6 +150,8 @@ def register_request(request):
 
 def update_request(request,slug):
     if not request.user.has_perm("main.update_request"):
+        message = request.user.username + " tried to access the IT update_request page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     slug = get_object_or_404(CustomUser,slug=slug)
@@ -163,6 +171,8 @@ def update_request(request,slug):
 
 def update_password(request,slug):
     if not request.user.has_perm("main.update_password"):
+        message = request.user.username + " tried to access the IT update_password page."
+        logger.error(message)
         return redirect("/wrong_user/")
     slug = get_object_or_404(CustomUser,slug=slug)
     user = CustomUser.objects.get(id = slug.id)
@@ -187,6 +197,8 @@ def update_password(request,slug):
 @login_required()
 def add_assets(request):
     if not request.user.has_perm("main.add_assets"):
+        message = request.user.username + " tried to access the IT add_assets page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     form = addItemForm()
@@ -206,6 +218,8 @@ def add_assets(request):
 @login_required(login_url='auth/login/')
 def update_assets(request, slug):
     if not request.user.has_perm("main.update_assets"):
+        message = request.user.username + " tried to access the IT update_assets page."
+        logger.error(message)
         return redirect("/wrong_user/")
     slug = get_object_or_404(Items,slug=slug)
     item = Items.objects.get(id = slug.id)
@@ -226,6 +240,8 @@ def update_assets(request, slug):
 @login_required(login_url='auth/login/')
 def delete_assets(request, slug):
     if not request.user.has_perm("main.delete_assets"):
+        message = request.user.username + " tried to access the IT delete_assets page."
+        logger.error(message)
         return redirect("/wrong_user/")
     
     slug = get_object_or_404(Items,slug=slug)
@@ -241,6 +257,8 @@ def delete_assets(request, slug):
 #admin reset axes lockout
 def unlock_username(request):
     if not request.user.has_perm("main.unlock_username"):
+        message = request.user.username + " tried to access the IT unlock_username page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     if request.method == 'POST':
@@ -256,6 +274,8 @@ def unlock_username(request):
 
 def unlock_ip(request):
     if not request.user.has_perm("main.unlock_ip"):
+        message = request.user.username + " tried to access the IT unlock_ip page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     if request.method == 'POST':
@@ -279,6 +299,8 @@ def unlock_ip(request):
 @login_required()
 def staff_home(request):
     if not request.user.has_perm("main.staff_home"):
+        message = request.user.username + " tried to access the Staff staff_home page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -291,6 +313,8 @@ def staff_home(request):
 @login_required()
 def requested_list(request):
     if not request.user.has_perm("main.requested_list"):
+        message = request.user.username + " tried to access the Staff requested_list page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -302,6 +326,8 @@ def requested_list(request):
 @login_required(login_url='/auth/login/')
 def staff_request(request,slug):
     if not request.user.has_perm("main.staff_request"):
+        message = request.user.username + " tried to access the Staff staff_request page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     slug = get_object_or_404(Items,slug=slug)
@@ -322,6 +348,8 @@ def staff_request(request,slug):
 @login_required()
 def manager_home(request):
     if not request.user.has_perm("main.manager_home"):
+        message = request.user.username + " tried to access the Manager manager_home page."
+        logger.error(message)
         return redirect("/wrong_user/")
     return render(request,'manager/request_management.html')
 
@@ -330,6 +358,8 @@ def manager_home(request):
 @login_required()
 def inventory_management(request):
     if not request.user.has_perm("main.inventory_management"):
+        message = request.user.username + " tried to access the Manager inventory_management page."
+        logger.error(message)
         return redirect("/wrong_user/")
     return render(request, 'manager/inventory_management.html')
 
@@ -338,6 +368,8 @@ def inventory_management(request):
 @login_required()
 def inventory_list(request):
     if not request.user.has_perm("main.inventory_list"):
+        message = request.user.username + " tried to access the Manager inventory_list page."
+        logger.error(message)
         return redirect("/wrong_user/")
     
     userHospID = request.user.hospital
@@ -349,6 +381,8 @@ def inventory_list(request):
 @login_required(login_url='auth/login/')
 def manager_update_assets(request, slug):
     if not request.user.has_perm("main.manager_update_assets"):
+        message = request.user.username + " tried to access the Manager manager_update_assets page."
+        logger.error(message)
         return redirect("/wrong_user/")
     
     userHospID = request.user.hospital
@@ -371,6 +405,8 @@ def manager_update_assets(request, slug):
 @login_required(login_url='auth/login/')
 def manager_delete_assets(request, slug):
     if not request.user.has_perm("main.manager_delete_assets"):
+        message = request.user.username + " tried to access the Manager manager_delete_assets page."
+        logger.error(message)
         return redirect("/wrong_user/")
     userHospID = request.user.hospital
     slug = get_object_or_404(Items,slug=slug)
@@ -387,6 +423,8 @@ def manager_delete_assets(request, slug):
 @login_required()
 def select_list(request):
     if not request.user.has_perm("main.select_list"):
+        message = request.user.username + " tried to access the Manager select_list page."
+        logger.error(message)
         return redirect("/wrong_user/")
     
     userHospID = request.user.hospital
@@ -399,6 +437,8 @@ def select_list(request):
 @login_required(login_url='/auth/login/')
 def select(request,slug):
     if not request.user.has_perm("main.select"):
+        message = request.user.username + " tried to access the Manager select page."
+        logger.error(message)
         return redirect("/wrong_user/")
     
     slug = get_object_or_404(Items,slug=slug)
@@ -414,6 +454,8 @@ def select(request,slug):
 @login_required()
 def request_to(request):
     if not request.user.has_perm("main.request_to"):
+        message = request.user.username + " tried to access the Manager request_to page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -425,6 +467,8 @@ def request_to(request):
 @login_required(login_url='/auth/login/')
 def manager_update_request_to(request,slug):
     if not request.user.has_perm("main.manager_update_request_to"):
+        message = request.user.username + " tried to access the Manager manager_update_request_to page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     slug = get_object_or_404(Items,slug=slug)
@@ -442,6 +486,8 @@ def manager_update_request_to(request,slug):
 @login_required(login_url='/auth/login/')
 def manager_delete_request_to(request,slug):
     if not request.user.has_perm("main.manager_delete_request_to"):
+        message = request.user.username + " tried to access the Manager manager_delete_request_to page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     slug = get_object_or_404(Items,slug=slug)
@@ -457,6 +503,8 @@ def manager_delete_request_to(request,slug):
 @login_required()
 def request_from_list(request):
     if not request.user.has_perm("main.request_from_list"):
+        message = request.user.username + " tried to access the Manager request_from_list page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
@@ -469,6 +517,8 @@ def request_from_list(request):
 @login_required(login_url='/auth/login/')
 def manager_request_from(request, slug):
     if not request.user.has_perm("main.manager_request_from"):
+        message = request.user.username + " tried to access the Manager manager_request_from page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
 
@@ -489,6 +539,8 @@ def manager_request_from(request, slug):
 @login_required(login_url='/auth/login/')
 def approve(request, slug):
     if not request.user.has_perm("main.approve"):
+        message = request.user.username + " tried to access the Manager approve page."
+        logger.error(message)
         return redirect("/wrong_user/")
 
     userHospID = request.user.hospital
