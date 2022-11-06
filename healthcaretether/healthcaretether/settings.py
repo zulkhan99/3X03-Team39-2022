@@ -200,7 +200,7 @@ FIDO_SERVER_NAME="healthcaretether"
 
 #Session settings
 SESSION_ENGINE ='django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 43200 #12 hours of active use
+SESSION_COOKIE_AGE = 28800 #8 hours of active use
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 SESSION_COOKIE_HTTPONLY = True
