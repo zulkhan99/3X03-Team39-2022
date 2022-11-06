@@ -22,4 +22,3 @@
 #         test = self.client.post('/auth/login', {'username':'testuser', 'password': '12345'})
 #         self.assertEqual(test.status_code, 302)
 
-# #testing jenkins
