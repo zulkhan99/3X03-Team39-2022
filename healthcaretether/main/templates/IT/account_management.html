@@ -40,9 +40,9 @@
         <tr>
           <td>{{ user.username}}</td>
           <td>
-            <a href="{% url 'update-request' user.id %}">Update</a>
+            <a href="{% url 'update-request' user.slug %}">Update</a>
           </td>
-          <td><a href="{% url 'update-password' user.id %}">Change Password</a></td>
+          <td><a href="{% url 'update-password' user.slug %}">Change Password</a></td>
         </tr>
         {% endfor %}
       </tbody>

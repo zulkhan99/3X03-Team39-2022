@@ -36,8 +36,7 @@ class Items(models.Model):
         return self.product_name
 
     def save(self, *args, **kwargs):  # new
-        if not self.id:
-            self.slug = slugify(self.product_name)
+        self.slug = slugify(self.product_name)
         return super().save(*args, **kwargs)
 
 #inventory model
@@ -122,6 +121,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         ("A","Admin")
     ]
     role = models.CharField(max_length=1,choices = ROLE_CHOICES, default="S")
+    slug = models.SlugField(null=True, unique=True, max_length=40)
+    
 
     # hospital = Hospital.objects.all()
     # HOSPITAL_CHOICES = [
@@ -139,6 +140,10 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     USERNAME_FIELD = 'username'
 
     objects = CustomUserManager()
+
+    def save(self, *args, **kwargs):  # new
+        self.slug = slugify(self.username)
+        return super().save(*args, **kwargs)
 
 class AccountManagement(models.Model):
     
