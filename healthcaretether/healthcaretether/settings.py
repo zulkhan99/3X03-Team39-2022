@@ -37,6 +37,8 @@ ALLOWED_HOSTS =  ['healthcaretether.xyz']
 CSRF_TRUSTED_ORIGINS = ['https://healthcaretether.xyz']
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
 # CSRF_TRUSTED_ORIGINS = ['http://localhost:1337']
 
 # Application definition
