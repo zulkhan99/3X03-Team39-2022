@@ -158,11 +158,26 @@ def update_request(request,slug):
     user = CustomUser.objects.get(id = slug.id)
     form = CustomUserChangeForm(instance=user)
 
+    currentrole = user.role
+    currentusername = user.username
+
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=user)
         if form.is_valid():
+
+            if currentrole != form.cleaned_data['role']:
+                if form.cleaned_data[role] == "S":
+                    role = "Staff"
+                elif form.cleaned_data[role] == "M":
+                    role = "Manager"
+                elif form.cleaned_data[role] == "A":
+                    role = "Admin"
+
+                message = "Admin " + request.user.username + " has changed " + currentusername + "'s role' to " + role
+                logger.info(message)
+
             form.save()
-            message = "Admin " + request.user.username + " updated user"
+            message = "Admin " + request.user.username + " updated " + currentusername
             logger.info(message)
             return redirect('account-management')
 
