@@ -59,3 +59,4 @@ ua-parser==0.16.1
 user-agents==2.2.0
 webauthn==1.6.0
 YubiOTP==1.0.0
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
