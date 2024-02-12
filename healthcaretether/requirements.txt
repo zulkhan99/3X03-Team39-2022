@@ -1,7 +1,7 @@
 asgiref==3.5.2
 asn1crypto==1.5.1
 attrs==22.1.0
-cbor2==5.4.3
+cbor2==5.6.0
 cffi==1.15.1
 colorama==0.4.5
 crispy-bootstrap5==0.6
